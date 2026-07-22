@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\juaz2\\\\Documents\\\\GitHub\\\\delasoft_front\" -Force)",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "Read(//c/Users/juaz2/Documents/GitHub/**)",
+      "Bash(dir \"c:\\\\Users\\\\juaz2\\\\Documents\\\\GitHub\")",
+      "Bash(dir \"c:\\\\Users\\\\juaz2\\\\Documents\\\\GitHub\\\\delasoft_front\\\\src\\\\hooks\")",
+      "Bash(dir \"c:\\\\Users\\\\juaz2\\\\Documents\\\\GitHub\\\\delasoft_pagina\")",
+      "Bash(dir \"c:\\\\Users\\\\juaz2\\\\Documents\\\\GitHub\\\\delasoft_pagina\\\\src\")",
+      "Bash(dir /S /B \"c:\\\\Users\\\\juaz2\\\\Documents\\\\GitHub\\\\delasoft_pagina\\\\src\\\\*.jsx\" \"c:\\\\Users\\\\juaz2\\\\Documents\\\\GitHub\\\\delasoft_pagina\\\\src\\\\*.js\")",
+      "Bash(Get-Content \"c:\\\\Users\\\\juaz2\\\\Documents\\\\GitHub\\\\delasoft_back\\\\README.md\")",
+      "Bash(node --input-type=module)",
+      "Bash(node -e \"try{require\\('./src/pages/Procurement.jsx'\\)}catch\\(e\\){console.log\\('not CommonJS - ok'\\)}\")",
+      "Bash(npx --yes vite build --mode development)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\juaz2\\Documents\\GitHub\\delasoft_pagina\\src\\pages"
+    ]
+  }
+}

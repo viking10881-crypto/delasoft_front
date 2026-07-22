@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -v \"safety_stock\\\\|stock_fisico\\\\|stock_reserved\\\\|stock_status\\\\|stock_level\\\\|stockColor\\\\|stockLevel\\\\|lowStock\\\\|noStock\\\\|stockColors\\\\|outOfStock\\\\|//\\\\|variant\\\\.stock\\\\|\\\\.stock\\\\b\\\\|stock_\\\\|item\\\\.stock\\\\|p\\\\.stock\\\\|v\\\\.stock\\\\|avail\\\\|bundleStock\\\\|STOCK\\\\|preview\\\\|stockActual\\\\|sin stock\\\\|sans stock\")"
+    ]
+  }
+}
