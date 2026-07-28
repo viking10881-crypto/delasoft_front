@@ -1,8 +1,10 @@
 // src/services/socket.js
 import { io } from 'socket.io-client';
 
-const rawUrl     = import.meta.env.VITE_API_URL || 'https://delasoft-back-1.onrender.com/api';
-export const SOCKET_URL = rawUrl.replace(/\/api\/?$/, '');
+const rawUrl = import.meta.env.VITE_API_URL || 'https://delasoft-back.onrender.com/api';
+export const SOCKET_URL = rawUrl.startsWith('/')
+  ? window.location.origin
+  : rawUrl.replace(/\/api\/?$/, '');
 
 let socket = null;
 

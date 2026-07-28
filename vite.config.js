@@ -7,9 +7,26 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://delasoft-back-1.onrender.com",
+        target: "https://delasoft-back.onrender.com",
         changeOrigin: true,
         secure: true,
+        configure: (proxy) => {
+          proxy.on("proxyReq", (proxyReq) => {
+            proxyReq.removeHeader("origin");
+            proxyReq.removeHeader("referer");
+          });
+        },
+      },
+      "/socket.io": {
+        target: "https://delasoft-back.onrender.com",
+        changeOrigin: true,
+        secure: true,
+        ws: true,
+        configure: (proxy) => {
+          proxy.on("proxyReqWs", (proxyReq) => {
+            proxyReq.removeHeader("origin");
+          });
+        },
       },
     },
   },
