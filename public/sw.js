@@ -77,8 +77,8 @@ self.addEventListener("push", (e) => {
   const {
     title    = "Delasoft",
     body     = "",
-    icon     = "https://res.cloudinary.com/dnnotij4x/image/upload/e_trim/w_192,h_192,c_pad,b_rgb:0b0b0d/v1777757010/solo_logo_i9cisz.png",
-    badge    = "https://res.cloudinary.com/dnnotij4x/image/upload/e_trim/w_72,h_72,c_pad,b_rgb:0b0b0d/v1777757010/solo_logo_i9cisz.png",
+    icon     = "/brand/delasoft-d.png",
+    badge    = "/brand/delasoft-d.png",
     url      = "/",
     tag      = "delasoft-general",
     severity = "info",

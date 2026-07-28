@@ -458,7 +458,7 @@ function PlanSelector({ plans, selected, onSelect }) {
         >
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-black flex-shrink-0"
-            style={{ backgroundColor: plan.color ?? "#6366f1" }}
+            style={{ backgroundColor: plan.color ?? "#0878E8" }}
           >
             {plan.name[0]}
           </div>
@@ -466,7 +466,7 @@ function PlanSelector({ plans, selected, onSelect }) {
             <div className="flex items-center gap-2">
               <span className="font-bold text-sm text-gray-900 dark:text-white">{plan.name}</span>
               {plan.badge_label && (
-                <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md text-white" style={{ backgroundColor: plan.color ?? "#6366f1" }}>
+                <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md text-white" style={{ backgroundColor: plan.color ?? "#0878E8" }}>
                   {plan.badge_label}
                 </span>
               )}

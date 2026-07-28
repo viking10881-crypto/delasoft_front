@@ -284,7 +284,7 @@ export default function BottomNav({ collapsed, setCollapsed }) {
         <div className="h-24 flex items-center px-8 flex-shrink-0">
           <div className="flex items-center gap-3 group cursor-pointer">
             <img
-              src="https://res.cloudinary.com/dnnotij4x/image/upload/v1777757394/Gemini_Generated_Image_six30zsix30zsix3-removebg-preview_ljvef7.png"
+              src="/brand/delasoft-d.png"
               alt="Delasoft"
               className="w-14 h-14 object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-lg"
             />
@@ -433,7 +433,7 @@ export default function BottomNav({ collapsed, setCollapsed }) {
       />
 
       <div
-        className={`lg:hidden fixed bottom-0 left-0 right-0 z-[70] transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+        className={`lg:hidden fixed bottom-0 left-0 right-0 z-[70] transition-transform duration-500 [transition-timing-function:cubic-bezier(0.32,0.72,0,1)] ${
           mobileMenuOpen ? "translate-y-0" : "translate-y-full"
         }`}
       >
@@ -441,7 +441,7 @@ export default function BottomNav({ collapsed, setCollapsed }) {
           <div className="flex items-center justify-between px-6 pt-4 pb-4 border-b border-slate-200 dark:border-white/10 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md">
             <div className="flex items-center gap-3">
               <img
-                src="https://res.cloudinary.com/dnnotij4x/image/upload/v1777757394/Gemini_Generated_Image_six30zsix30zsix3-removebg-preview_ljvef7.png"
+                src="/brand/delasoft-d.png"
                 alt="Delasoft"
                 className="w-10 h-10 object-contain drop-shadow-lg"
               />

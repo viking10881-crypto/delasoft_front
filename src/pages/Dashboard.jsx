@@ -105,7 +105,7 @@ export default function Dashboard() {
       <div className="text-center">
         <div style={{
           width: 32, height: 32,
-          border: "2.5px solid #6366f1",
+          border: "2.5px solid #0878E8",
           borderTopColor: "transparent",
           borderRadius: "50%",
           margin: "0 auto 12px",
@@ -162,7 +162,7 @@ export default function Dashboard() {
             <button
               onClick={() => navigate("/sales")}
               className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl text-white"
-              style={{ background: "#6366f1" }}
+              style={{ background: "#0878E8" }}
             >
               <Plus size={13} />
               <span className="hidden sm:inline">Nueva venta</span>
@@ -172,7 +172,7 @@ export default function Dashboard() {
             <button
               onClick={() => navigate("/products/new")}
               className="hidden sm:flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl"
-              style={{ color: "#4f46e5", background: "#eef2ff" }}
+              style={{ color: "#075FC0", background: "#EAF4FE" }}
             >
               <ShoppingBag size={13} /> Producto
             </button>

@@ -29,8 +29,9 @@ const PAGE_PRESETS = [
 ];
 
 const BRAND_PRESETS = [
-  { label: 'Naranja',  value: '#FF9900' },
-  { label: 'Azul',     value: '#3B82F6' },
+  { label: 'Azul Delasoft', value: '#0878E8' },
+  { label: 'Navy Delasoft', value: '#082B68' },
+  { label: 'Naranja',  value: '#F97316' },
   { label: 'Morado',   value: '#8B5CF6' },
   { label: 'Verde',    value: '#10B981' },
   { label: 'Rojo',     value: '#EF4444' },
@@ -53,7 +54,7 @@ const EMPTY = {
   store_navbar_text: 'light',
   store_page_bg:     '#FFFFFF',
   store_font:        '',
-  primary_color:     '#FF9900',
+  primary_color:     '#0878E8',
   logo_url:          '',
   business_name:     '',
 };
@@ -191,7 +192,7 @@ function StorePreview({ navBg, navText, pageBg, brandColor, logoUrl, businessNam
           {logoUrl ? (
             <img src={logoUrl} alt="logo" className="h-6 w-6 object-contain rounded" onError={e => e.target.style.display='none'} />
           ) : (
-            <div className="w-6 h-6 rounded" style={{ backgroundColor: brandColor || '#FF9900' }} />
+            <div className="w-6 h-6 rounded" style={{ backgroundColor: brandColor || '#0878E8' }} />
           )}
           <span className="text-[11px] font-bold" style={{ color: textColor }}>
             {businessName || 'Mi Tienda'}
@@ -204,7 +205,7 @@ function StorePreview({ navBg, navText, pageBg, brandColor, logoUrl, businessNam
         </div>
         <div
           className="px-3 py-1 rounded-full text-[9px] font-bold"
-          style={{ backgroundColor: brandColor || '#FF9900', color: isLight(brandColor || '#FF9900') ? '#000' : '#fff' }}
+          style={{ backgroundColor: brandColor || '#0878E8', color: isLight(brandColor || '#0878E8') ? '#000' : '#fff' }}
         >
           Comprar
         </div>
@@ -212,7 +213,7 @@ function StorePreview({ navBg, navText, pageBg, brandColor, logoUrl, businessNam
 
       {/* Página simulada */}
       <div className="px-5 py-5 space-y-3" style={{ backgroundColor: pageBg || '#FFFFFF', minHeight: 100 }}>
-        <div className="h-3 rounded-full w-2/3" style={{ backgroundColor: (brandColor || '#FF9900') + '20' }} />
+        <div className="h-3 rounded-full w-2/3" style={{ backgroundColor: (brandColor || '#0878E8') + '20' }} />
         <div className="h-2 rounded-full w-full bg-slate-100 dark:bg-white/10" />
         <div className="h-2 rounded-full w-5/6 bg-slate-100 dark:bg-white/10" />
         <div className="flex gap-2 mt-3">
@@ -221,7 +222,7 @@ function StorePreview({ navBg, navText, pageBg, brandColor, logoUrl, businessNam
               <div className="h-10 bg-slate-100 dark:bg-white/5" />
               <div className="p-2 space-y-1">
                 <div className="h-1.5 rounded w-3/4 bg-slate-200 dark:bg-white/10" />
-                <div className="h-1.5 rounded w-1/2" style={{ backgroundColor: (brandColor || '#FF9900') + '40' }} />
+                <div className="h-1.5 rounded w-1/2" style={{ backgroundColor: (brandColor || '#0878E8') + '40' }} />
               </div>
             </div>
           ))}
@@ -259,7 +260,7 @@ export default function AppearanceSettings() {
           store_navbar_text: p.store_navbar_text || 'light',
           store_page_bg:     p.store_page_bg     || '#FFFFFF',
           store_font:        p.store_font        || '',
-          primary_color:     p.primary_color     || '#FF9900',
+          primary_color:     p.primary_color     || '#0878E8',
           logo_url:          p.logo_url          || '',
           business_name:     p.business_name     || '',
         };

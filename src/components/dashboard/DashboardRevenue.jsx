@@ -10,7 +10,7 @@ export default function DashboardRevenue({ data }) {
     <Card>
       <div className="flex items-end justify-between flex-wrap gap-3 mb-4">
         <SectionTitle title="Ingresos vs Gastos" sub="Desempeño semanal" />
-        <ChartLegend items={[["#6366f1","Ingresos"],["#f87171","Gastos"],["#10b981","Utilidad"]]} />
+        <ChartLegend items={[["#0878E8","Ingresos"],["#f87171","Gastos"],["#10b981","Utilidad"]]} />
       </div>
       <div className="h-44 sm:h-56 lg:h-64">
         {data.length > 0 ? (
@@ -29,7 +29,7 @@ export default function DashboardRevenue({ data }) {
                 width={44}
               />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="ingresos" name="Ingresos" fill="#6366f1" radius={[4,4,0,0]} barSize={14} />
+              <Bar dataKey="ingresos" name="Ingresos" fill="#0878E8" radius={[4,4,0,0]} barSize={14} />
               <Bar dataKey="gastos"   name="Gastos"   fill="#f87171" radius={[4,4,0,0]} barSize={14} />
               <Line
                 dataKey="utilidad" name="Utilidad" type="monotone"

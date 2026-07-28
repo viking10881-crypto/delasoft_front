@@ -14,7 +14,7 @@ import NotificationsPanel from "./NotificationsPanel";
 import api from "../services/api";
 
 const FALLBACK_LOGO =
-  "https://res.cloudinary.com/dnnotij4x/image/upload/v1777757394/Gemini_Generated_Image_six30zsix30zsix3-removebg-preview_ljvef7.png";
+  "/brand/delasoft-d.png";
 
 export default function Header({ collapsed, onToggleSidebar }) {
   const ref = useRef(null);
@@ -134,7 +134,7 @@ export default function Header({ collapsed, onToggleSidebar }) {
           bg-white/70 dark:bg-[#0A0A0A]/70
           backdrop-blur-xl backdrop-saturate-150
           border-b border-black/[0.04] dark:border-white/[0.04]
-          transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+          transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
         "
         style={{ left: collapsed ? "0px" : "280px" }}
       >
@@ -170,7 +170,7 @@ export default function Header({ collapsed, onToggleSidebar }) {
                     {firstName}
                   </span>
                 )}
-                <Sparkles size={14} className="text-amber-500/80 hidden sm:block" />
+                <Sparkles size={14} className="text-brand hidden sm:block" />
               </h2>
               <p className="text-[10px] sm:text-[11px] font-semibold text-slate-400/80 dark:text-slate-500 uppercase tracking-[0.2em] mt-0.5 whitespace-nowrap hidden sm:block">
                 {currentDate}
@@ -264,7 +264,7 @@ export default function Header({ collapsed, onToggleSidebar }) {
                   border border-black/[0.08] dark:border-white/[0.08]
                   rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)]
                   overflow-hidden z-50 origin-top-right
-                  transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+                  transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
                   ${dropdownOpen
                     ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
                     : "opacity-0 scale-95 -translate-y-2 pointer-events-none"

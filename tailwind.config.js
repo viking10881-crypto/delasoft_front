@@ -14,11 +14,14 @@ export default {
       },
       colors: {
         brand: {
-          DEFAULT: "#FF9900",
-          hover:   "#e68a00",
-          muted:   "rgba(255,153,0,0.12)",
+          DEFAULT: "#0878E8",
+          hover:   "#075FC0",
+          muted:   "rgba(8,120,232,0.12)",
         },
         delasoft: {
+          blue:     "#0878E8",
+          navy:     "#082B68",
+          silver:   "#A7A9AC",
           black:    "#0B0B0D",
           graphite: "#1C1C22",
           white:    "#F5F5F7",

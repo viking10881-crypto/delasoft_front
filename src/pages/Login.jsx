@@ -63,7 +63,7 @@ function WelcomeScreen({ userName }) {
 
       <div className="relative z-10 flex flex-col items-center px-6 text-center">
         <img
-          src="https://res.cloudinary.com/dnnotij4x/image/upload/v1777757394/Gemini_Generated_Image_six30zsix30zsix3-removebg-preview_ljvef7.png"
+          src="/brand/delasoft-d.png"
           alt="Delasoft logo"
           className="w-20 h-20 md:w-24 md:h-24 object-contain mb-10 drop-shadow-lg"
         />
@@ -79,7 +79,7 @@ function WelcomeScreen({ userName }) {
             className="text-5xl md:text-8xl font-black tracking-tighter animate-in fade-in zoom-in-95 duration-1000 delay-200"
             style={{ color: "var(--text-primary)" }}
           >
-            delasoft<span style={{ color: "var(--brand)" }}>admin</span>
+            Delasoft<span style={{ color: "var(--brand)" }}>Admin</span>
           </span>
         </h1>
 
@@ -298,9 +298,9 @@ export default function Login() {
         {/* Header */}
         <div className="text-center mb-8">
           <img
-            src="https://res.cloudinary.com/dnnotij4x/image/upload/v1777757394/Gemini_Generated_Image_six30zsix30zsix3-removebg-preview_ljvef7.png"
+            src="/brand/delasoft-d.png"
             alt="Delasoft logo"
-            className="w-14 h-14 object-contain mx-auto mb-4 drop-shadow-md"
+            className="w-24 h-24 object-contain mx-auto mb-2 drop-shadow-lg"
           />
           <h2 className="text-3xl font-black tracking-tight" style={{ color: "var(--text-primary)" }}>
             Delasoft<span style={{ color: "var(--brand)" }}>Admin</span>
