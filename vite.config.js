@@ -2,14 +2,16 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
+const devBackend = process.env.VITE_DEV_PROXY_TARGET || "http://localhost:4000";
+
 export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
       "/api": {
-        target: "https://delasoft-back.onrender.com",
+        target: devBackend,
         changeOrigin: true,
-        secure: true,
+        secure: false,
         configure: (proxy) => {
           proxy.on("proxyReq", (proxyReq) => {
             proxyReq.removeHeader("origin");
@@ -18,9 +20,9 @@ export default defineConfig({
         },
       },
       "/socket.io": {
-        target: "https://delasoft-back.onrender.com",
+        target: devBackend,
         changeOrigin: true,
-        secure: true,
+        secure: false,
         ws: true,
         configure: (proxy) => {
           proxy.on("proxyReqWs", (proxyReq) => {
