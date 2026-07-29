@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Package, Search, RefreshCw, Loader2, AlertTriangle,
   XCircle, BarChart3, ChevronDown, ChevronUp,
-  DollarSign, Boxes, Clock, ShoppingCart,
+  DollarSign, Boxes, Clock, ShoppingCart, EyeOff,
 } from "lucide-react";
 import api from "../../services/api";
 import { useNotice } from "../../context/NoticeContext";
@@ -361,7 +361,18 @@ function InventoryRow({ item, onAdjust, onDamage, onLedger, canAdjust }) {
 
       {/* Producto */}
       <td className="px-4 py-3">
-        <p className="text-sm font-semibold text-gray-900 dark:text-white">{displayName}</p>
+        <div className="flex items-start gap-2">
+          <p className="text-sm font-semibold text-gray-900 dark:text-white">{displayName}</p>
+          {item.is_published === false && (
+            <span
+              title="Este producto se conserva en inventario, pero no aparece en la tienda online"
+              className="inline-flex flex-shrink-0 items-center gap-1 rounded-md bg-gray-100 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-gray-500 dark:bg-white/[0.06] dark:text-slate-400"
+            >
+              <EyeOff size={10} />
+              Oculto
+            </span>
+          )}
+        </div>
       </td>
 
       {/* SKU — variante si existe, producto si no */}

@@ -1,6 +1,6 @@
 // src/components/products/ProductCard.jsx
 import { memo } from 'react';
-import { Eye, Trash2, ShoppingBag, AlertCircle, Gift, Layers, Crown } from 'lucide-react';
+import { Eye, EyeOff, Trash2, ShoppingBag, AlertCircle, Gift, Layers, Crown, Archive, ArchiveRestore } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 function thumbUrl(url, size = 160) {
@@ -9,7 +9,7 @@ function thumbUrl(url, size = 160) {
   return url.replace('/upload/', `/upload/w_${size},h_${size},c_fill,f_auto,q_auto:best/`);
 }
 
-const ProductCard = memo(({ product, onView, onDelete }) => {
+const ProductCard = memo(({ product, onView, onDelete, onTogglePublication, onToggleLifecycle }) => {
   const { isSuperAdmin } = useAuth();
 
   if (!product) return null;
@@ -27,6 +27,8 @@ const ProductCard = memo(({ product, onView, onDelete }) => {
     category_name: categoryName,
     main_image: mainImage,
     owner_admin_name: ownerName,
+    is_active: isActive = true,
+    is_published: isPublished = true,
   } = product;
 
   // Usar disponible del endpoint de inventario si existe, si no caer en stock
@@ -66,6 +68,7 @@ const ProductCard = memo(({ product, onView, onDelete }) => {
         dark:bg-[#1C1C1E] dark:border-[#2C2C2E] dark:shadow-none
         dark:hover:bg-[#242426] dark:hover:border-[#3A3A3C]
         ${isBundle ? "ring-1 ring-orange-500/20 dark:ring-orange-500/10" : ""}
+        ${!isActive ? "opacity-70 grayscale-[0.35]" : ""}
       `}
     >
       {isBundle && (
@@ -125,6 +128,15 @@ const ProductCard = memo(({ product, onView, onDelete }) => {
               {stockBadge}
             </span>
           )}
+          <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded-md ${
+            !isActive
+              ? "bg-slate-200 text-slate-600 dark:bg-white/10 dark:text-slate-400"
+              : isPublished
+                ? "bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400"
+                : "bg-gray-100 text-gray-500 dark:bg-white/[0.06] dark:text-slate-400"
+          }`}>
+            {!isActive ? "Desactivado" : isPublished ? "Publicado" : "Oculto"}
+          </span>
         </div>
 
         <h3 className="font-bold text-sm sm:text-base tracking-tight text-gray-900 dark:text-white truncate mb-1">
@@ -164,6 +176,26 @@ const ProductCard = memo(({ product, onView, onDelete }) => {
         className="flex flex-col gap-1.5 flex-shrink-0 z-10 sm:opacity-0 sm:translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
         onClick={e => e.stopPropagation()}
       >
+        {isActive && (
+          <button
+            onClick={() => onTogglePublication?.(product)}
+            className={`p-2 rounded-xl transition-colors duration-150 ${
+              isPublished
+                ? "text-blue-500 bg-blue-50 hover:bg-blue-500 hover:text-white dark:bg-blue-500/10"
+                : "text-gray-400 bg-gray-50 hover:bg-brand hover:text-white dark:bg-[#2C2C2E]"
+            }`}
+            title={isPublished ? "Ocultar de la tienda" : "Publicar en la tienda"}
+          >
+            {isPublished ? <EyeOff size={15} /> : <Eye size={15} />}
+          </button>
+        )}
+        <button
+          onClick={() => onToggleLifecycle?.(product)}
+          className="p-2 text-gray-400 bg-gray-50 hover:bg-slate-700 hover:text-white dark:bg-[#2C2C2E] rounded-xl transition-colors duration-150"
+          title={isActive ? "Desactivar producto" : "Reactivar producto"}
+        >
+          {isActive ? <Archive size={15} /> : <ArchiveRestore size={15} />}
+        </button>
         <button
           onClick={() => onView(product)}
           className="p-2 text-gray-400 bg-gray-50 hover:bg-orange-500 hover:text-white dark:bg-[#2C2C2E] dark:hover:bg-orange-500 dark:hover:text-white rounded-xl transition-colors duration-150"

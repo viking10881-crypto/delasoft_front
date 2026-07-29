@@ -11,7 +11,10 @@ import {
   ChevronDown,
   Loader2,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Eye,
+  EyeOff,
+  Archive
 } from 'lucide-react';
 
 
@@ -32,6 +35,8 @@ function normalizeProduct(data) {
       null,
     has_variants: data?.has_variants ?? false,
     is_bundle: data?.is_bundle ?? false,
+    is_active: data?.is_active ?? true,
+    is_published: data?.is_published ?? true,
   };
 }
 
@@ -46,6 +51,7 @@ export default function Products() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const [openDetail, setOpenDetail] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
@@ -78,7 +84,7 @@ export default function Products() {
       // productos que el límite solicitado (señal de última página) o un
       // array vacío.
       while (page <= MAX_PAGES) {
-        const prodRes = await api.get(`/products?limit=${LIMIT}&page=${page}`);
+        const prodRes = await api.get(`/products?limit=${LIMIT}&page=${page}&status=all`);
 
         const raw =
           Array.isArray(prodRes?.data?.data)
@@ -124,7 +130,7 @@ export default function Products() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, filterType, pageSize]);
+  }, [searchTerm, filterType, statusFilter, pageSize]);
 
   useRealtimeData(['products', 'categories'], async (evt) => {
     if (!evt || typeof evt !== 'object') {
@@ -216,9 +222,20 @@ export default function Products() {
                 ? p.is_bundle
                 : true;
 
-      return matchSearch && matchType;
+      const matchStatus =
+        statusFilter === "all"
+          ? true
+          : statusFilter === "published"
+            ? p.is_active && p.is_published
+            : statusFilter === "hidden"
+              ? p.is_active && !p.is_published
+              : statusFilter === "inactive"
+                ? !p.is_active
+                : true;
+
+      return matchSearch && matchType && matchStatus;
     });
-  }, [products, searchTerm, filterType]);
+  }, [products, searchTerm, filterType, statusFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const safePage = Math.min(Math.max(1, currentPage), totalPages);
@@ -230,6 +247,13 @@ export default function Products() {
     simple: products.filter(p => !p.has_variants && !p.is_bundle).length,
     variants: products.filter(p => p.has_variants).length,
     bundle: products.filter(p => p.is_bundle).length,
+  }), [products]);
+
+  const statusCounts = useMemo(() => ({
+    all: products.length,
+    published: products.filter(p => p.is_active && p.is_published).length,
+    hidden: products.filter(p => p.is_active && !p.is_published).length,
+    inactive: products.filter(p => !p.is_active).length,
   }), [products]);
 
   const activeProductDetail = useMemo(() => {
@@ -259,7 +283,16 @@ export default function Products() {
         wasSoft ? "info" : "success"
       );
 
-      setProducts(prev => prev.filter(p => p.id !== id));
+      if (wasSoft) {
+        const updated = normalizeProduct(res?.data?.data || {
+          ...products.find(p => p.id === id),
+          is_active: false,
+          is_published: false,
+        });
+        setProducts(prev => prev.map(p => p.id === id ? { ...p, ...updated } : p));
+      } else {
+        setProducts(prev => prev.filter(p => p.id !== id));
+      }
     } catch (e) {
       const data = e?.response?.data;
       const msg = data?.message || "No se pudo eliminar el producto";
@@ -272,6 +305,53 @@ export default function Products() {
           suggestion: data.suggestion,
         });
       }
+    }
+  };
+
+  const handleTogglePublication = async (product) => {
+    if (!product?.is_active) return;
+    const nextPublished = !product.is_published;
+    const ok = await askConfirmation(
+      nextPublished ? "Publicar producto" : "Ocultar de la tienda",
+      nextPublished
+        ? `¿Publicar “${product.name}” en la tienda online?`
+        : `“${product.name}” dejará de aparecer y no podrá comprarse en la tienda. Su inventario e historial se conservarán.`
+    );
+    if (!ok) return;
+
+    try {
+      const { data } = await api.patch(`/products/${product.id}/publication`, {
+        is_published: nextPublished,
+      });
+      const updated = normalizeProduct(data?.data || { ...product, is_published: nextPublished });
+      setProducts(prev => prev.map(p => p.id === product.id ? { ...p, ...updated } : p));
+      showNotice(data?.message || (nextPublished ? "Producto publicado" : "Producto ocultado"), "success");
+    } catch (err) {
+      showNotice(err.response?.data?.message || "No se pudo cambiar la visibilidad", "error");
+    }
+  };
+
+  const handleToggleLifecycle = async (product) => {
+    const action = product.is_active ? "deactivate" : "reactivate";
+    const ok = await askConfirmation(
+      product.is_active ? "Desactivar producto" : "Reactivar producto",
+      product.is_active
+        ? `“${product.name}” se retirará de operaciones nuevas y de la tienda, pero conservará todo su historial.`
+        : `“${product.name}” volverá como oculto. Podrás revisarlo antes de publicarlo.`
+    );
+    if (!ok) return;
+
+    try {
+      const { data } = await api.patch(`/products/${product.id}/lifecycle`, { action });
+      const updated = normalizeProduct(data?.data || {
+        ...product,
+        is_active: action === "reactivate",
+        is_published: false,
+      });
+      setProducts(prev => prev.map(p => p.id === product.id ? { ...p, ...updated } : p));
+      showNotice(data?.message || "Estado actualizado", "success");
+    } catch (err) {
+      showNotice(err.response?.data?.message || "No se pudo cambiar el estado", "error");
     }
   };
 
@@ -440,6 +520,31 @@ export default function Products() {
             </div>
           </div>
 
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide mb-6 -mt-3">
+            {[
+              { key: "all", label: "Todos", Icon: null },
+              { key: "published", label: "Publicados", Icon: Eye },
+              { key: "hidden", label: "Ocultos", Icon: EyeOff },
+              { key: "inactive", label: "Desactivados", Icon: Archive },
+            ].map(({ key, label, Icon }) => (
+              <button
+                key={key}
+                onClick={() => setStatusFilter(key)}
+                className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all border ${
+                  statusFilter === key
+                    ? "bg-brand text-white border-brand shadow-sm shadow-blue-500/20"
+                    : "bg-white dark:bg-white/[0.05] border-gray-200 dark:border-white/[0.08] text-gray-600 dark:text-slate-400"
+                }`}
+              >
+                {Icon && <Icon size={12} />}
+                {label}
+                <span className={`px-1.5 rounded text-[10px] font-black ${statusFilter === key ? "bg-white/20" : "bg-gray-100 dark:bg-white/[0.08]"}`}>
+                  {statusCounts[key]}
+                </span>
+              </button>
+            ))}
+          </div>
+
           {/* ── Contenido ── */}
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 text-slate-400 dark:text-slate-600">
@@ -477,6 +582,8 @@ export default function Products() {
                   product={product}
                   onView={openPreview}
                   onDelete={handleDelete}
+                  onTogglePublication={handleTogglePublication}
+                  onToggleLifecycle={handleToggleLifecycle}
                 />
               ))}
             </div>
