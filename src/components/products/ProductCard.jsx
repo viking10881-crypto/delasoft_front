@@ -206,7 +206,7 @@ const ProductCard = memo(({ product, onView, onDelete, onTogglePublication, onTo
         <button
           onClick={() => onDelete(product.id)}
           className="p-2 text-gray-400 bg-gray-50 hover:bg-red-500 hover:text-white dark:bg-[#2C2C2E] dark:hover:bg-red-500 dark:hover:text-white rounded-xl transition-colors duration-150"
-          title="Eliminar producto"
+          title="Eliminar permanentemente"
         >
           <Trash2 size={15} strokeWidth={2} />
         </button>

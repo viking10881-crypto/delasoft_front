@@ -315,7 +315,11 @@ export default function Products() {
       nextPublished ? "Publicar producto" : "Ocultar de la tienda",
       nextPublished
         ? `¿Publicar “${product.name}” en la tienda online?`
-        : `“${product.name}” dejará de aparecer y no podrá comprarse en la tienda. Su inventario e historial se conservarán.`
+        : `“${product.name}” dejará de aparecer y no podrá comprarse en la tienda. Su inventario e historial se conservarán.`,
+      {
+        confirmLabel: nextPublished ? "Publicar" : "Ocultar",
+        tone: "primary",
+      }
     );
     if (!ok) return;
 
@@ -337,7 +341,11 @@ export default function Products() {
       product.is_active ? "Desactivar producto" : "Reactivar producto",
       product.is_active
         ? `“${product.name}” se retirará de operaciones nuevas y de la tienda, pero conservará todo su historial.`
-        : `“${product.name}” volverá como oculto. Podrás revisarlo antes de publicarlo.`
+        : `“${product.name}” volverá como oculto. Podrás revisarlo antes de publicarlo.`,
+      {
+        confirmLabel: product.is_active ? "Desactivar" : "Reactivar",
+        tone: "primary",
+      }
     );
     if (!ok) return;
 

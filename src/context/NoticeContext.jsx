@@ -12,6 +12,8 @@ export const NoticeProvider = ({ children }) => {
     show: false, 
     title: '', 
     message: '', 
+    confirmLabel: 'Eliminar permanentemente',
+    tone: 'danger',
     resolve: null // Aquí guardaremos la promesa
   });
 
@@ -20,12 +22,14 @@ export const NoticeProvider = ({ children }) => {
   }, []);
 
   // Función mágica: devuelve una promesa que se resuelve al hacer clic
-  const askConfirmation = useCallback((title, message) => {
+  const askConfirmation = useCallback((title, message, options = {}) => {
     return new Promise((resolve) => {
       setConfirm({
         show: true,
         title,
         message,
+        confirmLabel: options.confirmLabel ?? 'Eliminar permanentemente',
+        tone: options.tone ?? 'danger',
         resolve // Guardamos la función para avisar cuando acepten
       });
     });
@@ -54,6 +58,8 @@ export const NoticeProvider = ({ children }) => {
         isOpen={confirm.show}
         title={confirm.title}
         message={confirm.message}
+        confirmLabel={confirm.confirmLabel}
+        tone={confirm.tone}
         onConfirm={() => handleConfirmAction(true)}
         onClose={() => handleConfirmAction(false)}
       />
