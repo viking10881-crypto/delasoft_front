@@ -10,13 +10,27 @@ export const COLORS = [
   "#3b82f6","#8b5cf6","#06b6d4","#f97316",
 ];
 
+export const CHART_CURSOR = { fill: "rgba(99, 102, 241, 0.08)" };
+export const CHART_LINE_CURSOR = {
+  stroke: "var(--text-muted)",
+  strokeWidth: 1,
+  strokeOpacity: 0.35,
+};
+export const CHART_TOOLTIP_STYLE = {
+  background: "var(--bg-card)",
+  border: "1px solid var(--border)",
+  borderRadius: 12,
+  boxShadow: "0 12px 30px rgba(0, 0, 0, 0.18)",
+  color: "var(--text-primary)",
+  fontSize: 12,
+};
+
 // ── Tooltip compartido ───────────────────────────────────────────
 export function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
   return (
     <div style={{
-      background: "var(--bg-card)", border: "1px solid var(--border)",
-      borderRadius: 12, padding: "10px 14px", fontSize: 12,
+      ...CHART_TOOLTIP_STYLE, padding: "10px 14px",
     }}>
       <p style={{ fontWeight: 700, color: "var(--text-secondary)", margin: "0 0 6px" }}>{label}</p>
       {payload.map((p, i) => (

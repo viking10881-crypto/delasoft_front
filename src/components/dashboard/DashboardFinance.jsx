@@ -3,7 +3,7 @@ import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis,
   Tooltip, PieChart, Pie, Cell
 } from "recharts";
-import { Card, SectionTitle, EmptyState, COLORS, fmtCOP } from "./DashboardShared";
+import { Card, SectionTitle, EmptyState, COLORS, fmtCOP, CHART_CURSOR, CHART_TOOLTIP_STYLE } from "./DashboardShared";
 
 const expenseLabel = {
   purchase: "Compras",
@@ -35,7 +35,13 @@ export default function DashboardFinance({ marginByCategory, expensesByType }) {
                   tick={{ fill: "var(--text-secondary)", fontSize: 10, fontWeight: 700 }}
                   width={72}
                 />
-                <Tooltip formatter={v => [`${v}%`, "Margen"]} />
+                <Tooltip
+                  cursor={CHART_CURSOR}
+                  contentStyle={CHART_TOOLTIP_STYLE}
+                  labelStyle={{ color: "var(--text-secondary)" }}
+                  itemStyle={{ color: "var(--text-primary)" }}
+                  formatter={v => [`${v}%`, "Margen"]}
+                />
                 <Bar dataKey="margin" radius={[0,6,6,0]} barSize={14}>
                   {marginByCategory.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Bar>
@@ -60,7 +66,13 @@ export default function DashboardFinance({ marginByCategory, expensesByType }) {
                   >
                     {expensesByType.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                   </Pie>
-                  <Tooltip formatter={v => [fmtCOP(v), "Total"]} />
+                  <Tooltip
+                    cursor={false}
+                    contentStyle={CHART_TOOLTIP_STYLE}
+                    labelStyle={{ color: "var(--text-secondary)" }}
+                    itemStyle={{ color: "var(--text-primary)" }}
+                    formatter={v => [fmtCOP(v), "Total"]}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </div>

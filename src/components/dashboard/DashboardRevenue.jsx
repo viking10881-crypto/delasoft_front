@@ -3,7 +3,7 @@ import {
   XAxis, YAxis, Tooltip, ResponsiveContainer, Bar,
   CartesianGrid, ComposedChart, Line
 } from "recharts";
-import { Card, SectionTitle, ChartLegend, EmptyState, CustomTooltip } from "./DashboardShared";
+import { Card, SectionTitle, ChartLegend, EmptyState, CustomTooltip, CHART_CURSOR } from "./DashboardShared";
 
 export default function DashboardRevenue({ data }) {
   return (
@@ -28,7 +28,7 @@ export default function DashboardRevenue({ data }) {
                 tickFormatter={v => `$${(v / 1000).toFixed(0)}k`}
                 width={44}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={<CustomTooltip />} cursor={CHART_CURSOR} />
               <Bar dataKey="ingresos" name="Ingresos" fill="#0878E8" radius={[4,4,0,0]} barSize={14} />
               <Bar dataKey="gastos"   name="Gastos"   fill="#f87171" radius={[4,4,0,0]} barSize={14} />
               <Line

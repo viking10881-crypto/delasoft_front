@@ -25,7 +25,7 @@ const STATUS_META = {
 
 const LIMIT_META = {
   products:      { label: "Productos",   icon: Package },
-  users:         { label: "Usuarios",    icon: Users },
+  users:         { label: "Clientes registrados", icon: Users },
   categories:    { label: "Categorías",  icon: Tag },
   providers:     { label: "Proveedores", icon: Truck },
   banners:       { label: "Banners",     icon: Image },

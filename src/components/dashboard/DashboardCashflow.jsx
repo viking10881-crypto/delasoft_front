@@ -3,7 +3,7 @@ import {
   ResponsiveContainer, AreaChart, Area,
   XAxis, YAxis, Tooltip, CartesianGrid
 } from "recharts";
-import { Card, SectionTitle, ChartLegend, EmptyState, CustomTooltip } from "./DashboardShared";
+import { Card, SectionTitle, ChartLegend, EmptyState, CustomTooltip, CHART_LINE_CURSOR } from "./DashboardShared";
 
 export default function DashboardCashflow({ data }) {
   return (
@@ -37,7 +37,7 @@ export default function DashboardCashflow({ data }) {
                 tickFormatter={v => `$${(v / 1000).toFixed(0)}k`}
                 width={44}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={<CustomTooltip />} cursor={CHART_LINE_CURSOR} />
               <Area type="monotone" dataKey="ingresos" name="Ingresos" stroke="#0878E8" strokeWidth={2} fill="url(#gI)" />
               <Area type="monotone" dataKey="gastos"   name="Gastos"   stroke="#f87171" strokeWidth={2} fill="url(#gG)" />
             </AreaChart>

@@ -4,7 +4,7 @@ import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis,
   CartesianGrid, Tooltip, PieChart, Pie, Cell
 } from "recharts";
-import { Card, SectionTitle, EmptyState, COLORS, CustomTooltip, fmtCOP } from "./DashboardShared";
+import { Card, SectionTitle, EmptyState, COLORS, CustomTooltip, CHART_CURSOR, CHART_TOOLTIP_STYLE } from "./DashboardShared";
 
 const paymentIcons  = {
   cash:     <Banknote size={12} />,
@@ -39,7 +39,7 @@ export default function DashboardProducts({ topProducts, paymentMethods }) {
                   tick={{ fill: "var(--text-secondary)", fontSize: 11, fontWeight: 700 }}
                   width={100}
                 />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={<CustomTooltip />} cursor={CHART_CURSOR} />
                 <Bar dataKey="revenue" name="Valor" radius={[0,6,6,0]} barSize={14}>
                   {topProducts.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Bar>
@@ -64,7 +64,13 @@ export default function DashboardProducts({ topProducts, paymentMethods }) {
                   >
                     {paymentMethods.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                   </Pie>
-                  <Tooltip formatter={(v, n) => [v + " ventas", paymentLabel[n] ?? n]} />
+                  <Tooltip
+                    cursor={false}
+                    contentStyle={CHART_TOOLTIP_STYLE}
+                    labelStyle={{ color: "var(--text-secondary)" }}
+                    itemStyle={{ color: "var(--text-primary)" }}
+                    formatter={(v, n) => [v + " ventas", paymentLabel[n] ?? n]}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </div>
