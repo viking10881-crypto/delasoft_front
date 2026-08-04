@@ -38,6 +38,7 @@ import AppearanceSettings from "./pages/tools/AppearanceSettings";
 import PaymentAccount  from "./pages/tools/PaymentAccount";
 import MySubscription  from "./pages/MySubscription";
 import Pricing         from "./pages/Pricing";
+import Prospects       from "./pages/Prospects";
 
 import PrivateRoute    from "./routes/PrivateRoute";
 import ProtectedRoute  from "./routes/ProtectedRoute";
@@ -123,6 +124,12 @@ export default function App() {
                         <Route path="/admins" element={
                           <ProtectedRoute roles={["superadmin", "admin"]} feature="multi_admin">
                             <Admins />
+                          </ProtectedRoute>
+                        } />
+
+                        <Route path="/prospects" element={
+                          <ProtectedRoute roles={["superadmin"]}>
+                            <Prospects />
                           </ProtectedRoute>
                         } />
 

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Search, X, Package, Users, ShoppingBag, Truck,
   Wallet, BarChart3, Tags, Image, Sliders, FileText,
-  Settings, Home, ArrowRight, Clock, TrendingUp,
+  Settings, Home, ArrowRight, Clock, TrendingUp, UserRoundSearch,
 } from "lucide-react";
 import api from "../services/api";
 
@@ -23,6 +23,7 @@ const NAV_ITEMS = [
   { label: "Promociones",       to: "/tools/discounts",     icon: Sliders,   color: "text-rose-500"  },
   { label: "Reportes",          to: "/reports",             icon: FileText,  color: "text-slate-500" },
   { label: "Configuración",     to: "/tools/settings",      icon: Settings,  color: "text-slate-500" },
+  { label: "Prospectos",        to: "/prospects",           icon: UserRoundSearch, color: "text-blue-500" },
 ];
 
 function highlight(raw, query) {

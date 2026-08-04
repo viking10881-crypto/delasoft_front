@@ -10,7 +10,7 @@ import {
   BarChart3, FileText, Truck, Wallet, Calculator,
   Tags, Image, Sliders, X, KeyRound, Layers,
   MessageSquare, Bot, Mail, ShieldCheck,
-  Crown, Sparkles, Lock, Star, CreditCard,
+  Crown, Sparkles, Lock, Star, CreditCard, UserRoundSearch,
 } from "lucide-react";
 
 // ─── Mapa feature → mensaje de upgrade ───────────────────────────
@@ -138,6 +138,7 @@ export default function BottomNav({ collapsed, setCollapsed }) {
       emoji: "🛡️",
       items: [
         { to: "/admins", icon: ShieldCheck, label: "Administradores" },
+        { to: "/prospects", icon: UserRoundSearch, label: "Prospectos" },
       ],
     }] : []),
   ];
