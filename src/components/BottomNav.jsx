@@ -139,6 +139,7 @@ export default function BottomNav({ collapsed, setCollapsed }) {
       items: [
         { to: "/admins", icon: ShieldCheck, label: "Administradores" },
         { to: "/prospects", icon: UserRoundSearch, label: "Prospectos" },
+        { to: "/subscription-orders", icon: CreditCard, label: "Contrataciones" },
       ],
     }] : []),
   ];

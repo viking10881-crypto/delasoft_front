@@ -39,6 +39,7 @@ import PaymentAccount  from "./pages/tools/PaymentAccount";
 import MySubscription  from "./pages/MySubscription";
 import Pricing         from "./pages/Pricing";
 import Prospects       from "./pages/Prospects";
+import SubscriptionOrders from "./pages/SubscriptionOrders";
 
 import PrivateRoute    from "./routes/PrivateRoute";
 import ProtectedRoute  from "./routes/ProtectedRoute";
@@ -130,6 +131,11 @@ export default function App() {
                         <Route path="/prospects" element={
                           <ProtectedRoute roles={["superadmin"]}>
                             <Prospects />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/subscription-orders" element={
+                          <ProtectedRoute roles={["superadmin"]}>
+                            <SubscriptionOrders />
                           </ProtectedRoute>
                         } />
 
