@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet, useLocation, Navigate } from 'react-router-dom';
-import { Key, CreditCard, Briefcase, Bell, ChevronRight, Palette } from 'lucide-react';
+import { Key, CreditCard, Briefcase, Bell, ChevronRight, Palette, FileCheck2 } from 'lucide-react';
 
 const menuItems = [
   {
@@ -34,6 +34,14 @@ const menuItems = [
     icon: CreditCard,
     accent: '#d1fae5',
     accentText: '#065f46',
+  },
+  {
+    name: 'Facturación electrónica',
+    description: 'Conecta el proveedor fiscal de tu tienda',
+    path: '/tools/settings/electronic-invoicing',
+    icon: FileCheck2,
+    accent: '#dbeafe',
+    accentText: '#1d4ed8',
   },
   {
     name: 'Notificaciones',

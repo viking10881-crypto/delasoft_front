@@ -36,6 +36,7 @@ import Setup           from "./pages/Setup";
 import ApiKeys            from "./pages/tools/ApiKeys";
 import AppearanceSettings from "./pages/tools/AppearanceSettings";
 import PaymentAccount  from "./pages/tools/PaymentAccount";
+import ElectronicInvoicing from "./pages/tools/ElectronicInvoicing";
 import MySubscription  from "./pages/MySubscription";
 import Pricing         from "./pages/Pricing";
 import Prospects       from "./pages/Prospects";
@@ -226,6 +227,11 @@ export default function App() {
                             <Route path="payments" element={
                               <ProtectedRoute roles={["superadmin", "admin"]}>
                                 <PaymentAccount />
+                              </ProtectedRoute>
+                            } />
+                            <Route path="electronic-invoicing" element={
+                              <ProtectedRoute roles={["superadmin", "admin"]}>
+                                <ElectronicInvoicing />
                               </ProtectedRoute>
                             } />
                             <Route path="notifications" element={

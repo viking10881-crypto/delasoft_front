@@ -173,6 +173,7 @@ export default function MySubscription() {
 
   const [data,       setData]      = useState(null);
   const [plans,      setPlans]     = useState([]);
+  const [invoices,   setInvoices]  = useState([]);
   const [loading,    setLoading]   = useState(true);
   const [busy,       setBusy]      = useState(false);
   const [showCancel, setShowCancel] = useState(false);
@@ -180,12 +181,14 @@ export default function MySubscription() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const [subRes, plansRes] = await Promise.all([
+      const [subRes, plansRes, invoicesRes] = await Promise.all([
         api.get("/subscriptions/me"),
         api.get("/subscriptions/plans"),
+        api.get("/subscriptions/me/invoices"),
       ]);
       setData(subRes.data);
       setPlans(plansRes.data.plans ?? []);
+      setInvoices(invoicesRes.data.invoices ?? []);
     } catch {
       toast.error("No se pudo cargar la suscripción");
     } finally {
@@ -231,6 +234,27 @@ export default function MySubscription() {
       refresh();
     } catch (e) {
       toast.error(e.response?.data?.message ?? "Error al cancelar");
+    } finally { setBusy(false); }
+  };
+
+  const downloadLatestInvoice = async () => {
+    const invoice = invoices[0];
+    if (!invoice) return toast.error("Todavía no tienes facturas de suscripción");
+    setBusy(true);
+    try {
+      const response = await api.get(`/subscriptions/me/invoices/${invoice.id}/pdf`, {
+        responseType: "blob",
+      });
+      const url = URL.createObjectURL(response.data);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `DELASOFT-${invoice.invoice_number}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      toast.error(e.response?.data?.message ?? "No se pudo descargar la factura");
     } finally { setBusy(false); }
   };
 
@@ -435,11 +459,13 @@ export default function MySubscription() {
               </button>
             )}
             <button
-              onClick={() => navigate("/tools/finance")}
+              onClick={downloadLatestInvoice}
+              disabled={busy || invoices.length === 0}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-zinc-700
-                         text-zinc-400 hover:text-white hover:border-zinc-500 text-sm font-medium transition-colors"
+                         text-zinc-400 hover:text-white hover:border-zinc-500 text-sm font-medium transition-colors
+                         disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <FileText size={14} /> Ver facturas
+              <FileText size={14} /> {invoices.length ? "Descargar última factura" : "Sin facturas disponibles"}
             </button>
           </div>
         </div>

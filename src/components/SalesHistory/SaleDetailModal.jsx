@@ -4,7 +4,7 @@ import {
   Hourglass, XCircle, CheckCircle2, Banknote,
   ArrowRightLeft, Handshake, Calendar, AlertCircle,
   Clock, Plus, Loader2, Receipt, Upload, Trash2, Eye, FileText,
-  Truck, ShoppingCart, Star,
+  Truck, ShoppingCart, Star, FileCheck2,
 } from "lucide-react";
 import api          from "../../services/api";
 import { useAuth }  from "../../context/AuthContext";
@@ -613,6 +613,8 @@ export default function SaleDetailModal({ sale: initialSale, onClose }) {
   const [loading,        setLoading]        = useState(true);
   const [activeTab,      setActiveTab]      = useState("items");
   const [showPayForm,    setShowPayForm]    = useState(false);
+  const [fiscal,         setFiscal]         = useState(null);
+  const [requestingInvoice, setRequestingInvoice] = useState(false);
 
   const { mutate: deliverMutate, loading: delivering } = useMarkSaleDelivered(() => {
     loadData(true);
@@ -622,10 +624,11 @@ export default function SaleDetailModal({ sale: initialSale, onClose }) {
   const loadData = async (silent = false) => {
     if (!silent) setLoading(true);
     try {
-      const [itemsRes, paymentsRes, scheduleRes] = await Promise.allSettled([
+      const [itemsRes, paymentsRes, scheduleRes, fiscalRes] = await Promise.allSettled([
         api.get(`/sales/${initialSale.id}`),
         api.get(`/sales/${initialSale.id}/payments`),
         api.get(`/sales/${initialSale.id}/payment-schedule`),
+        api.get(`/fiscal-integrations/sales/${initialSale.id}`),
       ]);
       if (itemsRes.status === "fulfilled") {
         const d = itemsRes.value.data;
@@ -639,6 +642,7 @@ export default function SaleDetailModal({ sale: initialSale, onClose }) {
       if (scheduleRes.status === "fulfilled") {
         setSchedule(scheduleRes.value.data?.data ?? []);
       }
+      if (fiscalRes.status === "fulfilled") setFiscal(fiscalRes.value.data?.data ?? null);
     } catch {}
     setLoading(false);
   };
@@ -662,6 +666,16 @@ export default function SaleDetailModal({ sale: initialSale, onClose }) {
   const dueSoon       = daysLeft !== null && daysLeft >= 0 && daysLeft <= 3;
 
   const canAddPayment = can("sale.create") && (isPending || isPartial) && !isOnline;
+  const requestElectronicInvoice = async () => {
+    setRequestingInvoice(true);
+    try {
+      const { data } = await api.post(`/fiscal-integrations/sales/${sale.id}/request`);
+      showNotice(data.message, "success");
+      await loadData(true);
+    } catch (error) {
+      showNotice(error.response?.data?.message || "No se pudo solicitar la factura electrónica", "error");
+    } finally { setRequestingInvoice(false); }
+  };
 
   /* ── Ícono principal (discreto, sin fondo saturado) ── */
   const headerIcon = isFiado
@@ -1002,6 +1016,19 @@ export default function SaleDetailModal({ sale: initialSale, onClose }) {
             )}
 
             {/* Imprimir */}
+            {can("sale.create") && fiscal?.integration?.is_active && (
+              fiscal?.invoice ? (
+                <div className="flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-3.5 py-3 text-xs font-semibold text-blue-700">
+                  <FileCheck2 size={15}/>
+                  Factura electrónica: {fiscal.invoice.status === "requested" ? "solicitada, pendiente de emisión" : fiscal.invoice.status}
+                </div>
+              ) : (
+                <button onClick={requestElectronicInvoice} disabled={requestingInvoice || isCancelled}
+                  className="sale-detail-no-print w-full py-3 bg-blue-700 hover:bg-blue-800 disabled:opacity-50 text-white rounded-xl flex items-center justify-center gap-2 text-sm font-bold transition-colors">
+                  {requestingInvoice ? <Loader2 size={15} className="animate-spin"/> : <FileCheck2 size={15}/>} Generar factura electrónica
+                </button>
+              )
+            )}
             <button onClick={() => window.print()}
               className="sale-detail-no-print w-full py-3 bg-[var(--bg-subtle)] hover:bg-[var(--border)] text-[var(--text-secondary)] rounded-xl flex items-center justify-center gap-2 text-sm font-semibold transition-colors">
               <Printer size={15} />
