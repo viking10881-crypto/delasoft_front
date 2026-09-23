@@ -77,7 +77,6 @@ export default function Providers() {
         <Loader2 size={32} color="#2563eb" style={{ animation: "spin 0.8s linear infinite", display: "block", margin: "0 auto 10px" }} />
         <p style={{ color: "var(--text-muted)", fontWeight: 600, fontSize: 12, margin: 0 }}>Cargando proveedores...</p>
       </div>
-      <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
     </div>
   );
 
@@ -85,7 +84,6 @@ export default function Providers() {
   if (isMobile && mobileView === "detail" && selectedProvider) {
     return (
       <div style={{ fontFamily: "system-ui, sans-serif", background: "var(--bg-page)", minHeight: "100vh" }}>
-        <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
         {createModal && <CreateProviderModal onClose={() => setCreateModal(false)} onSuccess={handleRefresh} />}
         {editModal && (
           <EditProviderModal
@@ -107,8 +105,6 @@ export default function Providers() {
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg-page)", fontFamily: "system-ui, -apple-system, sans-serif" }}>
-      <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
-
       {createModal && <CreateProviderModal onClose={() => setCreateModal(false)} onSuccess={handleRefresh} />}
       {editModal && selectedProvider && (
         <EditProviderModal

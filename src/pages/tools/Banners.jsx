@@ -197,7 +197,7 @@ function BannerModal({ open, onClose, banner, onSaved }) {
               />
               {previewUrl ? (
                 <div className="relative">
-                  <img src={previewUrl} className="w-full h-36 sm:h-44 object-cover rounded-xl" />
+                  <img src={previewUrl} alt="Vista previa del banner" className="w-full h-36 sm:h-44 object-cover rounded-xl" />
                   <div className="absolute inset-0 bg-black/45 opacity-0 hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
                     <div className="bg-white rounded-lg px-3 py-2 flex items-center gap-2 text-sm font-medium text-gray-800">
                       <Upload size={14} /> Cambiar imagen

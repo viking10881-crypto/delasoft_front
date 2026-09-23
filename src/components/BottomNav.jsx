@@ -39,12 +39,10 @@ export default function BottomNav({ collapsed, setCollapsed }) {
   const [mobileMenuOpen, setMobileMenuOpen]     = useState(false);
   const location = useLocation();
 
-  // ── Auto-collapse sidebar al cambiar de ruta ─────────────────────
+  // ── Cierra el drawer móvil al cambiar de ruta ─────────────────────
+  // (el sidebar de escritorio no se auto-colapsa: el usuario decide si lo oculta)
   useEffect(() => {
     setMobileMenuOpen(false);
-    if (!collapsed) {
-      setCollapsed(true);
-    }
   }, [location.pathname]);
 
   useEffect(() => {

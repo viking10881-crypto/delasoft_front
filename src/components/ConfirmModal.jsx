@@ -1,4 +1,6 @@
 import { CheckCircle2, Trash2 } from "lucide-react";
+import Modal from "./ui/Modal";
+import Button from "./ui/Button";
 
 const ConfirmModal = ({
   isOpen,
@@ -9,43 +11,38 @@ const ConfirmModal = ({
   onConfirm,
   onClose,
 }) => {
-  if (!isOpen) return null;
-
   const isDanger = tone === "danger";
   const Icon = isDanger ? Trash2 : CheckCircle2;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-[2.5rem] p-8 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200">
-        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${
-          isDanger ? "bg-red-50 text-red-500" : "bg-blue-50 text-blue-600"
-        }`}>
-          <Icon size={32} />
-        </div>
-        <h3 className="text-xl font-black text-slate-800 mb-2">{title}</h3>
-        <p className="text-slate-500 font-medium mb-8 leading-relaxed">{message}</p>
-        <div className="flex gap-3">
-          <button 
-            onClick={onClose} 
-            className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-colors"
-          >
-            Cancelar
-          </button>
-          <button 
-            onClick={onConfirm} 
-            className={`flex-1 py-4 text-white rounded-2xl font-bold transition-all active:scale-95 ${
-              isDanger
-                ? "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-200"
-                : "bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200"
-            }`}
-          >
-            {confirmLabel}
-          </button>
-        </div>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <div
+        className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6"
+        style={{
+          backgroundColor: isDanger ? "rgba(239,68,68,0.1)" : "var(--brand-muted)",
+          color: isDanger ? "#ef4444" : "var(--brand)",
+        }}
+      >
+        <Icon size={32} />
       </div>
-    </div>
+
+      <h3 className="text-xl font-black mb-2" style={{ color: "var(--text-primary)" }}>
+        {title}
+      </h3>
+      <p className="font-medium mb-8 leading-relaxed" style={{ color: "var(--text-muted)" }}>
+        {message}
+      </p>
+
+      <div className="flex gap-3">
+        <Button variant="secondary" className="flex-1" onClick={onClose}>
+          Cancelar
+        </Button>
+        <Button variant={isDanger ? "danger" : "primary"} className="flex-1" onClick={onConfirm}>
+          {confirmLabel}
+        </Button>
+      </div>
+    </Modal>
   );
 };
 
-// ESTA ES LA LÍNEA QUE FALTA:
 export default ConfirmModal;

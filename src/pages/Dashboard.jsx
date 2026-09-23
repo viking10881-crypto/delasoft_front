@@ -116,14 +116,11 @@ export default function Dashboard() {
           Cargando dashboard…
         </p>
       </div>
-      <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
     </div>
   );
 
   return (
     <>
-      <style>{`@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}`}</style>
-
       {/* El padding-top lo da MainLayout vía --header-height.
           El padding-bottom cubre el nav móvil (ya lo pone MainLayout con pb-28 lg:pb-10). */}
       <div className="max-w-[1400px] mx-auto px-3 sm:px-5 lg:px-8 py-4 sm:py-6 flex flex-col gap-4 sm:gap-5">

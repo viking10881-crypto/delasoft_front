@@ -182,7 +182,6 @@ export default function FinancePinGate({ children }) {
   // ── Render: cargando ─────────────────────────────────────────
   if (status === 'loading') return (
     <div style={st.overlay}>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       <div style={st.spinner} />
     </div>
   );
@@ -208,7 +207,6 @@ export default function FinancePinGate({ children }) {
   return (
     <div style={st.overlay}>
       <style>{`
-        @keyframes spin  { to { transform: rotate(360deg); } }
         @keyframes shake {
           0%,100% { transform: translateX(0); }
           20%     { transform: translateX(-8px); }

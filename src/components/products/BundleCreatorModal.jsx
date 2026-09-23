@@ -240,7 +240,7 @@ export default function BundleCreatorModal({ isOpen, onClose, onCreated, categor
                 <div className="flex gap-2 flex-wrap">
                   {previews.map((src, i) => (
                     <div key={i} className="relative w-16 h-16">
-                      <img src={src} className="w-full h-full object-cover rounded-xl border border-gray-200" />
+                      <img src={src} alt={`Imagen ${i + 1} del bundle`} className="w-full h-full object-cover rounded-xl border border-gray-200" />
                       <button type="button" onClick={() => { setPreviews(p => p.filter((_,j) => j!==i)); setImages(p => p.filter((_,j) => j!==i)); }}
                         className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center">
                         <X size={11} />

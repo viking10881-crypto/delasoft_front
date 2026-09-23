@@ -412,13 +412,7 @@ export default function Login() {
         {/* Footer */}
         <div className="text-center mt-8">
           <p className="text-xs font-semibold" style={{ color: "var(--text-muted)" }}>
-            ¿Olvidaste tu contraseña?{" "}
-            <span
-              className="cursor-pointer hover:underline"
-              style={{ color: "var(--text-primary)" }}
-            >
-              Solicitar restablecimiento
-            </span>
+            ¿Olvidaste tu contraseña? Contacta a un administrador para restablecerla.
           </p>
         </div>
       </div>
