@@ -93,7 +93,7 @@ export default function ReservationsModal({ item, onClose, onReleased }) {
               </p>
             )}
           </div>
-          <button onClick={onClose} className="p-2 rounded-full border bg-white dark:bg-white/[0.06] border-indigo-200 dark:border-indigo-500/30 text-gray-400 hover:text-red-500 transition-colors">
+          <button onClick={onClose} aria-label="Cerrar" className="p-2 rounded-full border bg-white dark:bg-white/[0.06] border-indigo-200 dark:border-indigo-500/30 text-gray-400 hover:text-red-500 transition-colors">
             <X size={18} />
           </button>
         </div>

@@ -36,6 +36,7 @@ export default function DamageModal({ item, onClose, onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (saving) return; // evita registrar la merma dos veces si se envía el form dos veces muy rápido
     const err = validate();
     if (err) { setError(err); return; }
     setError("");
@@ -75,7 +76,7 @@ export default function DamageModal({ item, onClose, onSuccess }) {
             <h2 className="text-lg font-black text-gray-900 dark:text-white">Registrar merma</h2>
             <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5 truncate max-w-[260px]">{item.name}</p>
           </div>
-          <button onClick={onClose} className="p-2 rounded-full border bg-white dark:bg-white/[0.06] border-red-200 dark:border-red-500/30 text-gray-400 hover:text-red-500 transition-colors">
+          <button onClick={onClose} aria-label="Cerrar" className="p-2 rounded-full border bg-white dark:bg-white/[0.06] border-red-200 dark:border-red-500/30 text-gray-400 hover:text-red-500 transition-colors">
             <X size={18} />
           </button>
         </div>

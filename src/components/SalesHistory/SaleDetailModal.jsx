@@ -127,7 +127,7 @@ function ProofModal({ url, onClose }) {
       <div className="relative max-w-2xl w-full">
         <div className="flex items-center justify-between mb-3">
           <span className="text-white/60 text-xs font-semibold uppercase tracking-widest">Comprobante de pago</span>
-          <button onClick={onClose}
+          <button onClick={onClose} aria-label="Cerrar"
             className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors">
             <X size={14} />
           </button>
@@ -723,7 +723,7 @@ export default function SaleDetailModal({ sale: initialSale, onClose }) {
               <p className="text-[10px] text-[var(--text-muted)] opacity-70">{fullDate(sale.created_at)}</p>
             </div>
           </div>
-          <button onClick={onClose}
+          <button onClick={onClose} aria-label="Cerrar"
             className="w-7 h-7 bg-[var(--bg-subtle)] rounded-full flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors flex-shrink-0 ml-2">
             <X size={13} strokeWidth={2.5} />
           </button>

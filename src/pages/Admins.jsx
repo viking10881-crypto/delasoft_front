@@ -516,7 +516,7 @@ function AdminModal({ isEditing, formData, isSaving, plans, onChange, onClose, o
               {isEditing ? "Modifica datos del admin" : "Configura el perfil y el plan de suscripción"}
             </p>
           </div>
-          <button onClick={onClose} className="p-2 rounded-full transition-colors border bg-white dark:bg-white/[0.06] border-gray-200 dark:border-white/[0.08] text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10">
+          <button onClick={onClose} aria-label="Cerrar" className="p-2 rounded-full transition-colors border bg-white dark:bg-white/[0.06] border-gray-200 dark:border-white/[0.08] text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10">
             <X size={18} />
           </button>
         </div>
@@ -731,6 +731,7 @@ function PlanAssignModal({ admin, plans, onClose, onSuccess }) {
           </div>
           <button
             onClick={onClose}
+            aria-label="Cerrar"
             className="p-2 rounded-full transition-colors border bg-white dark:bg-white/[0.06] border-gray-200 dark:border-white/[0.08] text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
           >
             <X size={18} />

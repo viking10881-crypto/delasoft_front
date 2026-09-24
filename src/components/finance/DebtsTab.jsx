@@ -45,6 +45,7 @@ function PaymentModal({ provider, onClose, onSuccess }) {
           </div>
           <button
             onClick={onClose}
+            aria-label="Cerrar"
             className="p-2 hover:bg-[--bg-subtle] rounded-xl transition-colors text-[--text-muted] hover:text-[--text-primary]"
           >
             <X size={18} />

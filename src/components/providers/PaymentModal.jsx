@@ -17,6 +17,7 @@ export function PaymentModal({ provider, onClose, onSuccess }) {
   const [error, setError]   = useState("");
 
   const handleSubmit = async () => {
+    if (saving) return; // evita doble registro de pago si se clickea dos veces muy rápido
     if (!form.amount || isNaN(form.amount) || Number(form.amount) <= 0) {
       setError("Ingresa un monto válido mayor a 0."); return;
     }

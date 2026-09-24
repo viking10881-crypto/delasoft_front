@@ -194,7 +194,7 @@ export default function BundleCreatorModal({ isOpen, onClose, onCreated, categor
             </h3>
             <p className="text-xs text-gray-400 mt-0.5">Paso {step} de 2 — {step === 1 ? "Información" : "Productos"}</p>
           </div>
-          <button onClick={onClose} className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+          <button onClick={onClose} aria-label="Cerrar" className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
             <X size={15} strokeWidth={2.5} />
           </button>
         </div>

@@ -141,7 +141,7 @@ function VariantPicker({ product, onSelect, onClose }) {
             <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">Seleccionar variante</p>
             <h3 className="font-black text-gray-900 dark:text-white leading-tight truncate">{product.name}</h3>
           </div>
-          <button onClick={onClose} className="w-7 h-7 bg-gray-100 dark:bg-white/[0.08] rounded-full flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-gray-200 transition-colors">
+          <button onClick={onClose} aria-label="Cerrar" className="w-7 h-7 bg-gray-100 dark:bg-white/[0.08] rounded-full flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-gray-200 transition-colors">
             <X size={13} strokeWidth={2.5} />
           </button>
         </div>
@@ -439,6 +439,7 @@ export default function Sales() {
 
   /* ── Checkout ────────────────────────────────────────────── */
   const handleCheckout = async () => {
+    if (isSaving) return; // evita doble venta si el botón se clickea dos veces muy rápido
     if (!can("sale.create"))
       return showNotice("Sin permiso para registrar ventas", "error");
     if (!selectedClient)

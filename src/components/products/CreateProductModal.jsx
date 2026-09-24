@@ -176,6 +176,7 @@ export default function CreateProductModal({
           </div>
           <button
             onClick={onClose}
+            aria-label="Cerrar"
             className="w-8 h-8 bg-gray-100 dark:bg-[#2C2C2E] rounded-full flex items-center justify-center text-gray-500 dark:text-[#8E8E93] hover:bg-gray-200 dark:hover:bg-[#3A3A3C] transition-colors"
           >
             <X size={14} strokeWidth={2.5} />

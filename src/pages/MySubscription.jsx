@@ -115,7 +115,7 @@ function CancelModal({ onConfirm, onClose, loading }) {
             <h3 className="text-white font-semibold text-lg">Cancelar suscripción</h3>
             <p className="text-zinc-400 text-sm mt-1">Esta acción no puede deshacerse fácilmente.</p>
           </div>
-          <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors">
+          <button onClick={onClose} aria-label="Cerrar" className="text-zinc-500 hover:text-white transition-colors">
             <X size={20} />
           </button>
         </div>

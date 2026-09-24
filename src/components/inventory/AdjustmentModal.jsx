@@ -54,6 +54,7 @@ export default function AdjustmentModal({ item, onClose, onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (saving) return; // evita doble ajuste de inventario si se envía el form dos veces muy rápido
     const err = validate();
     if (err) { setError(err); return; }
     setError("");
@@ -85,7 +86,7 @@ export default function AdjustmentModal({ item, onClose, onSuccess }) {
             <h2 className="text-lg font-black text-gray-900 dark:text-white">Ajuste manual de stock</h2>
             <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5 truncate max-w-[260px]">{item.name}</p>
           </div>
-          <button onClick={onClose} className="p-2 rounded-full border bg-white dark:bg-white/[0.06] border-gray-200 dark:border-white/[0.08] text-gray-400 hover:text-red-500 transition-colors">
+          <button onClick={onClose} aria-label="Cerrar" className="p-2 rounded-full border bg-white dark:bg-white/[0.06] border-gray-200 dark:border-white/[0.08] text-gray-400 hover:text-red-500 transition-colors">
             <X size={18} />
           </button>
         </div>

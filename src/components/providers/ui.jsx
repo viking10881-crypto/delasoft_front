@@ -95,6 +95,7 @@ export function ModalWrapper({ onClose, title, subtitle, children }) {
           </div>
           <button
             onClick={onClose}
+            aria-label="Cerrar"
             style={{
               background: "var(--bg-page)", border: "none", borderRadius: 8,
               padding: 8, cursor: "pointer", color: "var(--text-muted)", marginTop: 4,

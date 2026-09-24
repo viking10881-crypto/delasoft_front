@@ -831,7 +831,7 @@ function CreateModal({ formData, isSaving, permsMap, onTogglePerm, onChange, onC
               La clave completa se mostrará <strong>una sola vez</strong>
             </p>
           </div>
-          <button onClick={onClose} className="p-2 rounded-full border bg-white dark:bg-white/[0.06] border-gray-200 dark:border-white/[0.08] text-gray-400 hover:text-red-500">
+          <button onClick={onClose} aria-label="Cerrar" className="p-2 rounded-full border bg-white dark:bg-white/[0.06] border-gray-200 dark:border-white/[0.08] text-gray-400 hover:text-red-500">
             <X size={18} />
           </button>
         </div>
@@ -934,10 +934,10 @@ function NewKeyModal({ apiKey, onClose }) {
                 {apiKey}
               </code>
               <div className="flex gap-2 flex-shrink-0">
-                <button onClick={() => setVisible((v) => !v)} className="p-1.5 rounded-lg text-gray-500 hover:text-white transition-colors">
+                <button onClick={() => setVisible((v) => !v)} aria-label={visible ? "Ocultar clave" : "Mostrar clave"} className="p-1.5 rounded-lg text-gray-500 hover:text-white transition-colors">
                   {visible ? <EyeOff size={14} /> : <Eye size={14} />}
                 </button>
-                <button onClick={handleCopy} className={`p-1.5 rounded-lg transition-colors ${copied ? "text-emerald-400" : "text-gray-500 hover:text-white"}`}>
+                <button onClick={handleCopy} aria-label="Copiar clave" className={`p-1.5 rounded-lg transition-colors ${copied ? "text-emerald-400" : "text-gray-500 hover:text-white"}`}>
                   {copied ? <Check size={14} /> : <Copy size={14} />}
                 </button>
               </div>

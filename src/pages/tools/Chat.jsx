@@ -179,6 +179,7 @@ const Lightbox = ({ src, onClose }) => {
     >
       <button
         onClick={onClose}
+        aria-label="Cerrar"
         style={{
           position: 'fixed', top: 16, right: 16,
           background: 'rgba(255,255,255,0.12)', border: 'none',
@@ -317,7 +318,7 @@ const Bubble = memo(({ m, isMe, onEdit, onDelete, isMobile }) => {
                   background: 'transparent', color: 'var(--text-primary)', minWidth: 0,
                 }}
               />
-              <button onClick={submitEdit}
+              <button onClick={submitEdit} aria-label="Guardar edición"
                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.accent, padding: 2 }}>
                 <Check size={13} />
               </button>

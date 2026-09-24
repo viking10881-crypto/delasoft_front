@@ -105,6 +105,7 @@ export default function VariantFormModal({
           <button
             type="button"
             onClick={onClose}
+            aria-label="Cerrar"
             className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-[#2C2C2E] text-gray-400 dark:text-[#8E8E93] transition-colors"
           >
             <X size={18} />

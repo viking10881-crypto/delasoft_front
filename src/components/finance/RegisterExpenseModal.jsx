@@ -134,6 +134,7 @@ export default function RegisterExpenseModal({ products = [], providers = [], on
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (saving) return; // evita registrar el gasto dos veces si se envía el form dos veces muy rápido
     const err = validate();
     if (err) { setError(err); return; }
     setError(null); setSaving(true);
@@ -264,6 +265,7 @@ export default function RegisterExpenseModal({ products = [], providers = [], on
           </div>
           <button
             onClick={onClose}
+            aria-label="Cerrar"
             className="p-2 rounded-xl hover:bg-[--bg-subtle] text-[--text-muted] hover:text-[--text-primary] transition-colors"
           >
             <X size={18} />
@@ -584,6 +586,7 @@ export default function RegisterExpenseModal({ products = [], providers = [], on
                     <button
                       type="button"
                       onClick={removeImage}
+                      aria-label="Quitar imagen"
                       className="absolute top-2 right-2 p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
                     >
                       <X size={16} />

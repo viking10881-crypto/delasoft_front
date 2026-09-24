@@ -37,6 +37,7 @@ export default function DiscountModal({
           </div>
           <button
             onClick={onClose}
+            aria-label="Cerrar"
             className="w-8 h-8 rounded-full flex items-center justify-center transition-colors
               bg-gray-100 dark:bg-white/[0.06]
               text-gray-400 dark:text-slate-500

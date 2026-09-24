@@ -653,7 +653,7 @@ export default function Analytics() {
                       className="w-full pl-8 pr-8 py-2 text-xs rounded-xl outline-none transition-all bg-gray-50 dark:bg-white/[0.05] border border-gray-200 dark:border-white/[0.08] text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-slate-600 focus:border-blue-400 dark:focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/10"
                     />
                     {searchInput && (
-                      <button onClick={clearSearch} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300">
+                      <button onClick={clearSearch} aria-label="Limpiar búsqueda" className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-slate-300">
                         <X size={12} />
                       </button>
                     )}

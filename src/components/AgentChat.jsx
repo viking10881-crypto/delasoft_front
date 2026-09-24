@@ -249,7 +249,7 @@ export default function AgentChat({ inline = false, isOpen, onClose }) {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button onClick={newChat} className="md:hidden w-9 h-9 rounded-xl flex items-center justify-center" style={{ color: "#5b5ef4", border: "1px solid rgba(91,94,244,0.25)", background: "rgba(91,94,244,0.06)" }}>
+              <button onClick={newChat} aria-label="Nueva conversación" className="md:hidden w-9 h-9 rounded-xl flex items-center justify-center" style={{ color: "#5b5ef4", border: "1px solid rgba(91,94,244,0.25)", background: "rgba(91,94,244,0.06)" }}>
                 <Plus size={17} strokeWidth={2.5} />
               </button>
               {onClose && (

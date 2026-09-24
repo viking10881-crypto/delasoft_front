@@ -39,7 +39,7 @@ function GroupConfirmModal({ items, supplier, onConfirm, onClose, loading }) {
             <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">Confirmar orden de compra</p>
             <h3 className="font-black text-gray-900 dark:text-white">Enviar al proveedor</h3>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/20 transition-colors">
+          <button onClick={onClose} aria-label="Cerrar" className="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/20 transition-colors">
             <X size={14} />
           </button>
         </div>
@@ -227,7 +227,7 @@ function ReceiveModal({ po, onConfirm, onClose, loading }) {
             <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">Recibir orden</p>
             <h3 className="font-black text-gray-900 dark:text-white">{po.order_number}</h3>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/20 transition-colors">
+          <button onClick={onClose} aria-label="Cerrar" className="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/20 transition-colors">
             <X size={14} />
           </button>
         </div>

@@ -161,7 +161,7 @@ function ReceivePurchaseOrderModal({ order, onClose, onReceived }) {
             </h3>
             <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">{order.order_number}</p>
           </div>
-          <button onClick={onClose} className="w-8 h-8 bg-gray-100 dark:bg-white/[0.08] rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
+          <button onClick={onClose} aria-label="Cerrar" className="w-8 h-8 bg-gray-100 dark:bg-white/[0.08] rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
             <X size={15} strokeWidth={2.5} />
           </button>
         </div>

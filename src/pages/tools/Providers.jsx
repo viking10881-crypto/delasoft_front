@@ -200,6 +200,7 @@ export default function Providers() {
           </select>
           <button
             onClick={handleRefresh}
+            aria-label="Actualizar"
             style={{
               background: "var(--bg-card)", border: "1px solid var(--border)",
               borderRadius: 10, padding: "0 12px", cursor: "pointer",

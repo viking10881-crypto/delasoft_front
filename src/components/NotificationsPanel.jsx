@@ -167,7 +167,7 @@ function InstallBanner({ onDismiss }) {
           Safari → Compartir → Añadir a inicio
         </p>
       </div>
-      <button onClick={onDismiss} className="text-slate-500 hover:text-slate-300 mt-0.5">
+      <button onClick={onDismiss} aria-label="Descartar" className="text-slate-500 hover:text-slate-300 mt-0.5">
         <X size={13} />
       </button>
     </div>
