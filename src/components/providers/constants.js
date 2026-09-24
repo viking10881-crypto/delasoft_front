@@ -41,7 +41,7 @@ export const inputStyle = (extra = {}) => ({
 });
 
 export const primaryBtn = {
-  width: "100%", background: "var(--bg-card)", color: "var(--text-primary)",
+  width: "100%", background: "var(--brand)", color: "#fff",
   border: "none", borderRadius: 12, padding: "14px",
   fontSize: 13, fontWeight: 700, cursor: "pointer",
   display: "flex", alignItems: "center", justifyContent: "center", gap: 8,

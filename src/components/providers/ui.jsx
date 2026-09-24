@@ -37,7 +37,7 @@ export function StatCard({ icon: Icon, label, value, accent }) {
 // ─── EmptyState ───────────────────────────────────────────────────────────────
 export function EmptyState({ icon: Icon, text }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, padding: "32px 20px", color: "#cbd5e1" }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, padding: "32px 20px", color: "var(--text-muted)" }}>
       <Icon size={28} />
       <p style={{ fontSize: 13, color: "var(--text-muted)", margin: 0, textAlign: "center" }}>{text}</p>
     </div>
@@ -49,7 +49,7 @@ export function Field({ label, children }) {
   return (
     <div>
       <label style={{
-        fontSize: 11, fontWeight: 700, color: "#64748b",
+        fontSize: 11, fontWeight: 700, color: "var(--text-muted)",
         textTransform: "uppercase", letterSpacing: "0.05em",
         display: "block", marginBottom: 6,
       }}>
@@ -81,7 +81,7 @@ export function ModalWrapper({ onClose, title, subtitle, children }) {
       }}>
         {/* Header */}
         <div style={{
-          padding: "20px 20px 14px", borderBottom: "1px solid #f1f5f9",
+          padding: "20px 20px 14px", borderBottom: "1px solid var(--border)",
           display: "flex", justifyContent: "space-between",
           alignItems: "flex-start", flexShrink: 0, position: "relative",
         }}>
