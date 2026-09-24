@@ -4,8 +4,10 @@ import { Plus, Trash2, FolderTree, X, Edit3, ChevronDown, ChevronRight } from "l
 import { toast } from "react-hot-toast";
 import api from "../../services/api";
 import useRealtimeData from "../../hooks/useRealtimeData";
+import { useNotice } from "../../context/NoticeContext";
 
 const Categories = () => {
+  const { askConfirmation } = useNotice();
   const [categories, setCategories] = useState([]);
   const [flatCategories, setFlatCategories] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -95,7 +97,11 @@ const Categories = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("¿Estás seguro? Esta acción no se puede deshacer.")) return;
+    const confirmed = await askConfirmation(
+      "¿Eliminar categoría?",
+      "Esta acción no se puede deshacer."
+    );
+    if (!confirmed) return;
     try {
       await api.delete(`/categories/${id}`);
       toast.success("Eliminada correctamente");

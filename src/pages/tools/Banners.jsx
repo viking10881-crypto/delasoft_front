@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, X, Upload, ImageIcon, Link2, Type, AlignLeft } from "lucide-react";
+import { toast } from "react-hot-toast";
 import api from "../../services/api";
+import { useNotice } from "../../context/NoticeContext";
 
 /* ─────────────────────────────────────────
    MODAL
@@ -71,13 +73,13 @@ function BannerModal({ open, onClose, banner, onSaved }) {
       if (banner?.id) {
         await api.put(`/banners/${banner.id}`, formData, config);
       } else {
-        if (!imageFile) return alert("Debes seleccionar una imagen");
+        if (!imageFile) return toast.error("Debes seleccionar una imagen");
         await api.post("/banners", formData, config);
       }
       onSaved();
       onClose();
     } catch (error) {
-      console.error("Error:", error);
+      toast.error(error.response?.data?.message || "Error al guardar el banner");
     } finally {
       setSaving(false);
     }
@@ -457,6 +459,7 @@ function BannerCard({ banner, onEdit, onToggle, onDelete }) {
    PÁGINA PRINCIPAL
 ───────────────────────────────────────── */
 export default function Banners() {
+  const { askConfirmation } = useNotice();
   const [banners, setBanners]         = useState([]);
   const [openModal, setOpenModal]     = useState(false);
   const [selectedBanner, setSelectedBanner] = useState(null);
@@ -471,7 +474,7 @@ export default function Banners() {
       const res = await api.get("/banners/admin");          // ← /admin
       setBanners(res.data?.data ?? []);                     // ← desempacar data
     } catch (error) {
-      console.error(error);
+      toast.error(error.response?.data?.message || "No se pudieron cargar los banners");
     } finally {
       setLoading(false);
     }
@@ -491,17 +494,21 @@ export default function Banners() {
       });
       loadBanners();
     } catch (error) {
-      console.error(error);
+      toast.error(error.response?.data?.message || "No se pudo actualizar el banner");
     }
   };
 
   const deleteBanner = async (id) => {
-    if (!confirm("¿Eliminar este banner?")) return;
+    const confirmed = await askConfirmation(
+      "¿Eliminar banner?",
+      "Esta acción no se puede deshacer."
+    );
+    if (!confirmed) return;
     try {
       await api.delete(`/banners/${id}`);
       loadBanners();
     } catch (error) {
-      console.error(error);
+      toast.error(error.response?.data?.message || "No se pudo eliminar el banner");
     }
   };
 

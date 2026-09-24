@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { CheckCircle2, CreditCard, Loader2, RefreshCw, Search, ShieldCheck } from "lucide-react";
 import toast from "react-hot-toast";
 import api from "../services/api";
+import { useNotice } from "../context/NoticeContext";
 
 const STATUS = {
   pending:  { label:"Pendiente", cls:"text-amber-600 bg-amber-500/10 border-amber-500/20" },
@@ -15,6 +16,7 @@ const money = cents => new Intl.NumberFormat("es-CO", { style:"currency", curren
 const date = value => value ? new Date(value).toLocaleString("es-CO", { dateStyle:"medium", timeStyle:"short" }) : "—";
 
 export default function SubscriptionOrders() {
+  const { askConfirmation } = useNotice();
   const [orders,setOrders] = useState([]);
   const [admins,setAdmins] = useState([]);
   const [counts,setCounts] = useState({});
@@ -53,7 +55,12 @@ export default function SubscriptionOrders() {
   const activate=async order=>{
     const adminId=Number(targets[order.id]);
     if(!adminId) return toast.error("Selecciona el administrador que recibirá la suscripción.");
-    if(!window.confirm(`¿Activar el plan ${order.plan_name} para el administrador seleccionado?`)) return;
+    const confirmed = await askConfirmation(
+      "¿Activar suscripción?",
+      `Se activará el plan ${order.plan_name} para el administrador seleccionado.`,
+      { confirmLabel: "Activar", tone: "success" }
+    );
+    if (!confirmed) return;
     setActivating(order.id);
     try{
       await api.post(`/subscriptions/admin/checkouts/${order.id}/activate`,{admin_id:adminId});

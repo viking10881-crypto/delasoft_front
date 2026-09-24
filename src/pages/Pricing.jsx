@@ -205,7 +205,7 @@ export default function PricingPage() {
       const { data } = await api.get('/subscriptions/plans');
       setPlans(data.plans);
     } catch (err) {
-      console.error(err);
+      setToast({ type: 'error', message: 'No pudimos cargar los planes. Intenta de nuevo.' });
     }
   }
 
@@ -213,7 +213,9 @@ export default function PricingPage() {
     try {
       const { data } = await api.get('/subscriptions/me');
       setSubscription(data.subscription);
-    } catch (_) {}
+    } catch (_) {
+      // No bloquea la vista de planes si falla; el usuario puede seguir eligiendo uno.
+    }
   }
 
   async function validateCoupon() {

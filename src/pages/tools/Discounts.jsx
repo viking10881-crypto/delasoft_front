@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { Plus, Tag, Clock, AlertCircle } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import api from '../../services/api';
+import { useNotice } from '../../context/NoticeContext';
 import useRealtimeData from '../../hooks/useRealtimeData';
 import { EMPTY_FORM, safeDate, getDiscountStatus } from '../../../utils/DiscountUtils';
 import { LoadingSpinner, EmptyState } from '../../components/discounts/DiscountUI';
@@ -36,6 +38,7 @@ const CARD_SHELL =
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function Discounts() {
+  const { askConfirmation } = useNotice();
   const [discounts,   setDiscounts]   = useState([]);
   const [products,    setProducts]    = useState([]);
   const [categories,  setCategories]  = useState([]);
@@ -89,7 +92,7 @@ export default function Discounts() {
       await api.patch(`/discounts/${discount.id}`, { is_active: newValue });
     } catch (err) {
       setDiscounts(p => p.map(d => d.id === discount.id ? { ...d, active: !newValue } : d));
-      alert(err.response?.data?.message || 'Error al actualizar');
+      toast.error(err.response?.data?.message || 'Error al actualizar');
     } finally {
       setTogglingIds(p => p.filter(id => id !== discount.id));
     }
@@ -162,12 +165,16 @@ export default function Discounts() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('¿Eliminar este descuento?')) return;
+    const confirmed = await askConfirmation(
+      '¿Eliminar descuento?',
+      'Esta acción no se puede deshacer.'
+    );
+    if (!confirmed) return;
     try {
       await api.delete(`/discounts/${id}`);
       setDiscounts(p => p.filter(d => d.id !== id));
     } catch (err) {
-      alert(err.response?.data?.message || 'Error al eliminar');
+      toast.error(err.response?.data?.message || 'Error al eliminar');
     }
   };
 

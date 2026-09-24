@@ -7,6 +7,7 @@ import {
   AlertCircle, RefreshCw, Inbox, X,
 } from "lucide-react";
 import api from "../../services/api";
+import { useNotice } from "../../context/NoticeContext";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const STATUS_CONFIG = {
@@ -50,6 +51,7 @@ function StatusBadge({ status }) {
 
 // ── Componente principal ──────────────────────────────────────────────────────
 export default function ContactMessages() {
+  const { askConfirmation } = useNotice();
   const [messages,  setMessages]  = useState([]);
   const [counts,    setCounts]    = useState({ total: 0, unread: 0, read: 0, replied: 0 });
   const [selected,  setSelected]  = useState(null);
@@ -125,7 +127,11 @@ export default function ContactMessages() {
 
   // ── Eliminar ──────────────────────────────────────────────────────────────
   const handleDelete = async (id) => {
-    if (!confirm("¿Eliminar este mensaje? Esta acción no se puede deshacer.")) return;
+    const confirmed = await askConfirmation(
+      "¿Eliminar mensaje?",
+      "Esta acción no se puede deshacer."
+    );
+    if (!confirmed) return;
     setDeleting(true);
     try {
       await api.delete(`/contact/${id}`);

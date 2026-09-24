@@ -1,6 +1,7 @@
 // src/components/NotificationsPanel.jsx
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 import {
   Bell, X, Package, ShoppingBag, Wallet, Tag,
   Truck, AlertTriangle, AlertCircle, Info,
@@ -320,7 +321,11 @@ export default function NotificationsPanel() {
         setPermission("granted");
       }
     } catch (err) {
-      console.error("[Push toggle]", err.message);
+      toast.error(
+        err.message?.includes("denied")
+          ? "Bloqueaste las notificaciones en el navegador. Actívalas desde la configuración del sitio."
+          : "No se pudo activar las notificaciones push."
+      );
       setPermission(notificationPermission());
     } finally {
       setPushLoading(false);

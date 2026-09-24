@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { RefreshCw, Plus, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 import api from "../services/api";
 
@@ -90,7 +91,7 @@ export default function Dashboard() {
           : []
       );
     } catch (err) {
-      console.error("[DASHBOARD ERROR]", err);
+      toast.error("No pudimos cargar el dashboard. Intenta actualizar.");
     } finally {
       setLoading(false);
       setRefreshing(false);

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Building2, Wallet, ShoppingCart, BarChart2, Phone, MessageCircle, Mail, ArrowLeft, ArrowDownLeft, Edit2, Power, Loader2 } from "lucide-react";
+import { toast } from "react-hot-toast";
 import api from "../../services/api";
 import { fmtCOP, quickLink } from "./constants";
 import { PaymentModal } from "./PaymentModal";
@@ -48,7 +49,7 @@ export function ProviderDetail({ provider, onRefresh, onBack, onEdit, isMobile }
       await api.patch(`/providers/${provider.id}/toggle-active`);
       onRefresh();
     } catch (e) {
-      console.error("Toggle active error:", e);
+      toast.error(e.response?.data?.message || "No se pudo actualizar el estado del proveedor.");
     } finally { setToggling(false); }
   };
 

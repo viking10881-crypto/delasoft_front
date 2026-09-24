@@ -1,5 +1,6 @@
 // src/context/ChatContext.jsx
 import { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
+import { toast } from 'react-hot-toast';
 import { getSocket } from '../services/socket';
 import { useAuth } from './AuthContext';
 import api from '../services/api';
@@ -196,7 +197,9 @@ export const ChatProvider = ({ children }) => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       // El socket event chat:dm que emite el backend actualizará la UI
-    } catch (err) { console.error('[Chat] sendImage:', err); }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'No se pudo enviar la imagen.');
+    }
   }, [activeUser]);
 
   // ── Editar mensaje ────────────────────────────────────────────────────────
@@ -204,7 +207,9 @@ export const ChatProvider = ({ children }) => {
     if (!activeUser) return;
     try {
       await api.put(`/chat/message/${messageId}`, { message: newText });
-    } catch (err) { console.error('[Chat] editMessage:', err); }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'No se pudo editar el mensaje.');
+    }
   }, [activeUser]);
 
   // ── Eliminar mensaje ──────────────────────────────────────────────────────
@@ -212,7 +217,9 @@ export const ChatProvider = ({ children }) => {
     if (!activeUser) return;
     try {
       await api.delete(`/chat/message/${messageId}`);
-    } catch (err) { console.error('[Chat] deleteMessage:', err); }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'No se pudo eliminar el mensaje.');
+    }
   }, [activeUser]);
 
   // ── Indicador de escritura ────────────────────────────────────────────────

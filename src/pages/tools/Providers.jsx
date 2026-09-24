@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Package, Plus, Search, RefreshCw, CheckCircle, AlertTriangle, Wallet, Building2, ChevronRight, Loader2 } from "lucide-react";
+import { toast } from "react-hot-toast";
 import api from "../../services/api";
 import { useBreakpoint } from "../../components/providers/useBreakpoint";
 import { CATEGORIES, fmtCOP, inputStyle } from "../../components/providers/constants";
@@ -28,7 +29,7 @@ export default function Providers() {
         setSelectedProvider(res.data[0]);
       }
     } catch (e) {
-      console.error("Error cargando proveedores:", e);
+      toast.error(e.response?.data?.message || "No se pudieron cargar los proveedores.");
     } finally {
       setLoading(false);
     }

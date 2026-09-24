@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import api from '../../services/api';
+import { useNotice } from '../../context/NoticeContext';
 
 /* ══════════════════════════════════════════════════════════
    ATOMS — fuera del componente principal (evita pérdida de foco)
@@ -176,6 +177,7 @@ const EMPTY_FORM = {
    COMPONENTE PRINCIPAL
 ══════════════════════════════════════════════════════════ */
 export default function BusinessProfile() {
+  const { askConfirmation } = useNotice();
   const [activeTab, setActiveTab]         = useState('info');
   const [profile, setProfile]             = useState(null);
   const [loading, setLoading]             = useState(true);
@@ -267,7 +269,11 @@ export default function BusinessProfile() {
   };
 
   const handleDeleteLogo = async () => {
-    if (!confirm('¿Eliminar el logo actual?')) return;
+    const confirmed = await askConfirmation(
+      '¿Eliminar logo?',
+      'Podrás subir uno nuevo cuando quieras.'
+    );
+    if (!confirmed) return;
     try {
       await api.delete('/admin-profile/logo');
       setProfile(p => ({ ...p, logo_url: null }));
