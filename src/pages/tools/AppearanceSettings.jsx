@@ -1,6 +1,7 @@
 // src/pages/tools/AppearanceSettings.jsx
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Save, RotateCcw, Loader2, CheckCircle, AlertCircle, Upload, ExternalLink } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import api from '../../services/api';
 
 /* ─── Presets ─────────────────────────────────────────── */
@@ -301,9 +302,9 @@ export default function AppearanceSettings() {
         social_links:    form.social_links,
       };
       await api.put('/admin-profile', payload);
-      showToast('Cambios guardados');
+      toast.success('Cambios guardados');
     } catch {
-      showToast('Error al guardar', 'error');
+      toast.error('Error al guardar');
     } finally {
       setSaving(false);
     }

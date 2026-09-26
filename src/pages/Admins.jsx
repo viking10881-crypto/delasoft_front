@@ -70,20 +70,9 @@ export default function Admins() {
   const openPlanModal  = (admin) => { setPlanTargetAdmin(admin); setIsPlanModalOpen(true); };
   const closePlanModal = () => { setIsPlanModalOpen(false); setPlanTargetAdmin(null); };
 
-  if (!isSuperAdmin()) {
-    return (
-      <div className="min-h-screen bg-slate-50 dark:bg-[#0D1117] flex items-center justify-center">
-        <div className="text-center">
-          <ShieldAlert className="mx-auto mb-4 text-red-400" size={48} />
-          <p className="text-gray-900 dark:text-white font-bold text-lg">Acceso Restringido</p>
-          <p className="text-gray-500 dark:text-slate-500 text-sm mt-1">Solo superadmin puede gestionar administradores.</p>
-        </div>
-      </div>
-    );
-  }
-
   // ── Carga ──────────────────────────────────────────────────────────────────
   const fetchAdmins = useCallback(async () => {
+    if (!isSuperAdmin()) return;
     setLoading(true);
     try {
       const [adminsRes, plansRes] = await Promise.all([
@@ -101,6 +90,18 @@ export default function Admins() {
   }, []);
 
   useEffect(() => { fetchAdmins(); }, [fetchAdmins]);
+
+  if (!isSuperAdmin()) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-[#0D1117] flex items-center justify-center">
+        <div className="text-center">
+          <ShieldAlert className="mx-auto mb-4 text-red-400" size={48} />
+          <p className="text-gray-900 dark:text-white font-bold text-lg">Acceso Restringido</p>
+          <p className="text-gray-500 dark:text-slate-500 text-sm mt-1">Solo superadmin puede gestionar administradores.</p>
+        </div>
+      </div>
+    );
+  }
 
   // ── Modales ────────────────────────────────────────────────────────────────
   const openCreate = () => {
