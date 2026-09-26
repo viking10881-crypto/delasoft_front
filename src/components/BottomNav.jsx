@@ -155,64 +155,95 @@ export default function BottomNav({ collapsed, setCollapsed }) {
 
     const rail = !mobile && collapsed;
 
+    // ── Tooltip posicionado con JS (fixed) ──────────────────────────
+    // El <nav> del sidebar tiene scroll vertical (overflow-y-auto), lo
+    // que por especificación CSS también recorta el overflow horizontal
+    // de sus descendientes. Un tooltip `absolute` que intente salirse
+    // del riel quedaría invisible, recortado por ese contenedor. Al
+    // usar `position: fixed` con coordenadas calculadas desde el ícono
+    // (getBoundingClientRect), el tooltip se posiciona respecto al
+    // viewport y no lo recorta ningún ancestro con overflow.
+    const [tip, setTip] = useState(null);
+    const showTip = (e) => {
+      if (!rail) return;
+      const r = e.currentTarget.getBoundingClientRect();
+      setTip({ top: r.top + r.height / 2, left: r.right + 10 });
+    };
+    const hideTip = () => setTip(null);
+
+    const tooltip = rail && tip && (
+      <div
+        style={{ position: "fixed", top: tip.top, left: tip.left, transform: "translateY(-50%)" }}
+        className="
+          z-[100] pointer-events-none
+          bg-white border border-slate-200 dark:bg-zinc-900 dark:border-zinc-700 text-slate-900 dark:text-white
+          text-xs rounded-xl px-3 py-2 shadow-2xl
+        "
+      >
+        {locked ? (
+          <div className="w-40 whitespace-normal">
+            <p className="font-semibold mb-0.5">🔒 Función bloqueada</p>
+            <p className="text-slate-600 dark:text-zinc-400">Actualiza tu plan para acceder a {FEATURE_UPGRADE_MSG[item.feature] ?? item.label}.</p>
+          </div>
+        ) : (
+          <span className="font-semibold whitespace-nowrap">{item.label}</span>
+        )}
+      </div>
+    );
+
     if (locked) {
       return (
-        <button
-          onClick={() => navigate("/subscription")}
-          aria-label={`${item.label} (función bloqueada, actualiza tu plan)`}
-          className={`
-            group relative flex items-center gap-3 w-full text-left
-            ${mobile
-              ? "px-4 py-3.5 rounded-2xl bg-transparent text-zinc-600 hover:bg-white/5"
-              : rail
-                ? "justify-center px-0 py-3 rounded-xl text-slate-600 hover:bg-white/5 hover:text-slate-500"
-                : "px-4 py-3 rounded-xl text-slate-600 hover:bg-white/5 hover:text-slate-500"
-            }
-            transition-all duration-300
-          `}
-        >
-          {mobile ? (
-            <>
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-white/5">
-                <item.icon size={16} strokeWidth={1.5} className="text-zinc-600" />
-              </div>
-              <span className="text-[14px] font-medium tracking-wide flex-1 text-zinc-600 line-through">
-                {item.label}
-              </span>
-              <Lock size={13} className="text-zinc-600 shrink-0" />
-            </>
-          ) : rail ? (
-            <item.icon size={18} strokeWidth={1.5} className="text-slate-600" />
-          ) : (
-            <>
+        <>
+          <button
+            onClick={() => navigate("/subscription")}
+            onMouseEnter={showTip}
+            onMouseLeave={hideTip}
+            aria-label={`${item.label} (función bloqueada, actualiza tu plan)`}
+            className={`
+              flex items-center gap-3 w-full text-left
+              ${mobile
+                ? "px-4 py-3.5 rounded-2xl bg-transparent text-zinc-600 hover:bg-white/5"
+                : rail
+                  ? "justify-center px-0 py-3 rounded-xl text-slate-600 hover:bg-white/5 hover:text-slate-500"
+                  : "px-4 py-3 rounded-xl text-slate-600 hover:bg-white/5 hover:text-slate-500"
+              }
+              transition-all duration-300
+            `}
+          >
+            {mobile ? (
+              <>
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-white/5">
+                  <item.icon size={16} strokeWidth={1.5} className="text-zinc-600" />
+                </div>
+                <span className="text-[14px] font-medium tracking-wide flex-1 text-zinc-600 line-through">
+                  {item.label}
+                </span>
+                <Lock size={13} className="text-zinc-600 shrink-0" />
+              </>
+            ) : rail ? (
               <item.icon size={18} strokeWidth={1.5} className="text-slate-600" />
-              <span className="font-medium text-[13px] flex-1 tracking-wide line-through">
-                {item.label}
-              </span>
-              <Lock size={12} className="text-slate-600" />
-            </>
-          )}
-
-          {/* Tooltip desktop */}
-          {!mobile && (
-            <div className="
-              absolute left-full ml-3 top-1/2 -translate-y-1/2 z-50
-              hidden group-hover:block
-              bg-white border border-slate-200 dark:bg-zinc-900 dark:border-zinc-700 text-slate-900 dark:text-white
-              text-xs rounded-xl px-3 py-2 w-44 shadow-2xl
-            ">
-              <p className="font-semibold mb-0.5">🔒 Función bloqueada</p>
-              <p className="text-slate-600 dark:text-zinc-400">Actualiza tu plan para acceder a {FEATURE_UPGRADE_MSG[item.feature] ?? item.label}.</p>
-            </div>
-          )}
-        </button>
+            ) : (
+              <>
+                <item.icon size={18} strokeWidth={1.5} className="text-slate-600" />
+                <span className="font-medium text-[13px] flex-1 tracking-wide line-through">
+                  {item.label}
+                </span>
+                <Lock size={12} className="text-slate-600" />
+              </>
+            )}
+          </button>
+          {tooltip}
+        </>
       );
     }
 
     // Ítem normal
     return (
+      <>
       <NavLink
         to={item.to}
+        onMouseEnter={showTip}
+        onMouseLeave={hideTip}
         aria-label={rail ? item.label : undefined}
         className={({ isActive }) => mobile
           ? `flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 active:scale-[0.98] ${
@@ -245,28 +276,16 @@ export default function BottomNav({ collapsed, setCollapsed }) {
             <ChevronRight size={16} className={`transition-opacity ${isActive ? "opacity-100 text-white" : "opacity-30 text-slate-500 dark:text-slate-600"}`} />
           </>
         ) : rail ? (
-          <>
-            <div className="relative">
-              <item.icon
-                size={18}
-                strokeWidth={isActive ? 2 : 1.5}
-                className={isActive ? "text-slate-900 dark:text-white" : "text-slate-600 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-slate-300"}
-              />
-              {item.badge > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-blue-600 ring-2 ring-white dark:ring-[#0a0a0a]" />
-              )}
-            </div>
-
-            {/* Tooltip estilo propio (reemplaza el title nativo del navegador) */}
-            <div className="
-              absolute left-full ml-3 top-1/2 -translate-y-1/2 z-50
-              hidden group-hover:block whitespace-nowrap
-              bg-white border border-slate-200 dark:bg-zinc-900 dark:border-zinc-700 text-slate-900 dark:text-white
-              text-xs font-semibold rounded-xl px-3 py-2 shadow-2xl
-            ">
-              {item.label}
-            </div>
-          </>
+          <div className="relative">
+            <item.icon
+              size={18}
+              strokeWidth={isActive ? 2 : 1.5}
+              className={isActive ? "text-slate-900 dark:text-white" : "text-slate-600 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-slate-300"}
+            />
+            {item.badge > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-blue-600 ring-2 ring-white dark:ring-[#0a0a0a]" />
+            )}
+          </div>
         ) : (
           <>
             {isActive && (
@@ -292,6 +311,8 @@ export default function BottomNav({ collapsed, setCollapsed }) {
           </>
         )}
       </NavLink>
+      {tooltip}
+      </>
     );
   }
 
