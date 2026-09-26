@@ -1,8 +1,11 @@
 // src/components/MainLayout.jsx
 import React, { useState, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
 import Header from "./Header";
 import BottomNav from "./BottomNav";
-import { Outlet } from "react-router-dom";
+import SubscriptionBanner from "./SubscriptionBanner";
+import AnimatedPage from "./AnimatedPage";
+import { Outlet, useLocation } from "react-router-dom";
 import usePageTracker from "../hooks/usePageTracker";  // ← nuevo
 
 export const SidebarContext = React.createContext({ collapsed: false, setCollapsed: () => {} });
@@ -11,6 +14,7 @@ const LG_BREAKPOINT = 1024;
 
 export default function MainLayout() {
   usePageTracker();  // ← una sola línea, rastrea todas las rutas automáticamente
+  const location = useLocation();
 
   const [collapsed, setCollapsed] = useState(false);
   const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= LG_BREAKPOINT);
@@ -49,7 +53,12 @@ export default function MainLayout() {
             style={{ paddingTop: "var(--header-height, 80px)" }}
             className="w-full pb-28 lg:pb-10"
           >
-            <Outlet />
+            <SubscriptionBanner />
+            <AnimatePresence mode="wait">
+              <AnimatedPage key={location.pathname}>
+                <Outlet />
+              </AnimatedPage>
+            </AnimatePresence>
           </main>
         </div>
       </div>

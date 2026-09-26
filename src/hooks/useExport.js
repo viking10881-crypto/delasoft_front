@@ -1,8 +1,4 @@
 // src/hooks/useExport.js
-import ExcelJS from "exceljs";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-
 const BRAND_INDIGO = [79, 70, 229];
 const BRAND_LIGHT  = [238, 242, 255];
 
@@ -11,6 +7,7 @@ export function useExport() {
   // ─── EXCEL ──────────────────────────────────────────────────────
   // sheets: [{ name, columns: [{key, label}], rows: [...], totals?: {...} }]
   async function exportExcel(sheets, filename = "reporte") {
+    const { default: ExcelJS } = await import("exceljs");
     const wb = new ExcelJS.Workbook();
     wb.creator  = "Delasoft";
     wb.created  = new Date();
@@ -74,7 +71,11 @@ export function useExport() {
 
   // ─── PDF ─────────────────────────────────────────────────────────
   // sections: [{ subtitle?, columns: [{header, dataKey, align?, format?}], rows, totals? }]
-  function exportPDF(title, subtitle, sections, filename = "reporte") {
+  async function exportPDF(title, subtitle, sections, filename = "reporte") {
+    const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
+      import("jspdf"),
+      import("jspdf-autotable"),
+    ]);
     const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
     const W = doc.internal.pageSize.getWidth();
 

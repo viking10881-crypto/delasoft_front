@@ -11,6 +11,7 @@ import { useAuth }   from "../../context/AuthContext";
 import AdjustmentModal       from "../../components/inventory/AdjustmentModal";
 import DamageModal           from "../../components/inventory/DamageModal";
 import LedgerModal           from "../../components/inventory/LedgerModal";
+import ReservationsModal     from "../../components/inventory/ReservationsModal";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const fmtN   = (n) => (n == null ? "—" : Number(n).toLocaleString("es-CO"));
@@ -63,6 +64,7 @@ export default function Inventory() {
   const [adjustTarget,       setAdjustTarget]       = useState(null);
   const [damageTarget,       setDamageTarget]        = useState(null);
   const [ledgerTarget,       setLedgerTarget]        = useState(null);
+  const [reservationsTarget, setReservationsTarget]  = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -301,6 +303,7 @@ export default function Inventory() {
                       onAdjust={() => setAdjustTarget({ ...item, product_id: item.product_id ?? item.id, variant_id: item.variant_id ?? undefined })}
                       onDamage={() => setDamageTarget({ ...item, product_id: item.product_id ?? item.id, variant_id: item.variant_id ?? undefined })}
                       onLedger={() => setLedgerTarget({ ...item, product_id: item.product_id ?? item.id })}
+                      onReservations={() => setReservationsTarget({ ...item, product_id: item.product_id ?? item.id })}
                     />
                   ))}
                 </tbody>
@@ -331,12 +334,19 @@ export default function Inventory() {
           onClose={() => setLedgerTarget(null)}
         />
       )}
+      {reservationsTarget && (
+        <ReservationsModal
+          item={reservationsTarget}
+          onClose={() => setReservationsTarget(null)}
+          onReleased={load}
+        />
+      )}
     </div>
   );
 }
 
 // ─── Fila de inventario ───────────────────────────────────────────────────────
-function InventoryRow({ item, onAdjust, onDamage, onLedger, canAdjust }) {
+function InventoryRow({ item, onAdjust, onDamage, onLedger, onReservations, canAdjust }) {
 
   // Valor de inventario: campo del backend si existe, o calcular desde stock × costo
   const invValue = item.inventory_value != null
@@ -431,6 +441,13 @@ function InventoryRow({ item, onAdjust, onDamage, onLedger, canAdjust }) {
               className="p-1.5 rounded-lg bg-gray-50 dark:bg-white/[0.04] text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-white/[0.08] border border-gray-200 dark:border-white/[0.08] transition-all"
             >
               <Clock size={13} />
+            </button>
+            <button
+              onClick={onReservations}
+              title="Ver reservas activas"
+              className="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 border border-indigo-200 dark:border-indigo-500/20 transition-all"
+            >
+              <ShoppingCart size={13} />
             </button>
           </div>
         ) : (

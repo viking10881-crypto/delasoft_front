@@ -1,11 +1,13 @@
 // pages/Dashboard.jsx — compatible con MainLayout
 import { useEffect, useState, useCallback } from "react";
-import { RefreshCw, Plus, ShoppingBag } from "lucide-react";
+import { RefreshCw, Plus, ShoppingBag, Receipt, Users, Truck, Boxes } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
 import api from "../services/api";
 
+import Card                   from "../components/ui/Card";
+import QuickAction             from "../components/QuickAction";
 import DashboardKPIs          from "../components/dashboard/DashboardKPIs";
 import DashboardRevenue        from "../components/dashboard/DashboardRevenue";
 import DashboardProducts       from "../components/dashboard/DashboardProducts";
@@ -176,6 +178,16 @@ export default function Dashboard() {
             </button>
           </div>
         </div>
+
+        {/* ── Accesos rápidos ─────────────────────────────────── */}
+        <Card className="p-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <QuickAction icon={<Receipt size={20} />} label="Historial" onClick={() => navigate("/history")} />
+            <QuickAction icon={<Users size={20} />}   label="Clientes"  onClick={() => navigate("/users")} />
+            <QuickAction icon={<Truck size={20} />}   label="Proveedores" onClick={() => navigate("/tools/providers")} />
+            <QuickAction icon={<Boxes size={20} />}   label="Inventario" onClick={() => navigate("/tools/inventory")} />
+          </div>
+        </Card>
 
         {/* ── Secciones ────────────────────────────────────── */}
         <DashboardKPIs kpis={kpis} />

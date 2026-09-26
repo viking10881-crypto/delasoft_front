@@ -1,11 +1,32 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Receipt, X, Search, RefreshCw,
-  Globe, Store, Clock,
-  ChevronRight,
+  Globe, Store, Clock, Lock,
+  ChevronRight, Download, FileSpreadsheet, FileText, Loader2,
+  CheckCircle2, DollarSign,
 } from "lucide-react";
 import api from "../services/api";
 import { useNotice } from "../context/NoticeContext";
+import { useExport } from "../hooks/useExport";
+import { ProtectedFeature } from "../components/ProtectedFeature";
+import StatCard from "../components/SalesHistory/StatCard";
+
+/* ─── Botón de exportar bloqueado (plan sin esta función) ──────── */
+function LockedExportButton() {
+  const navigate = useNavigate();
+  return (
+    <button
+      onClick={() => navigate("/subscription")}
+      title="Exportar es una función de planes pagos"
+      aria-label="Exportar (función bloqueada, actualiza tu plan)"
+      className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors relative"
+    >
+      <Download size={16} strokeWidth={2} />
+      <Lock size={10} className="absolute -bottom-0.5 -right-0.5 bg-[var(--bg-page)] rounded-full p-0.5" />
+    </button>
+  );
+}
 
 import { relativeTime } from "../components/SalesHistory/helpers";
 import SkeletonCard    from "../components/SalesHistory/SkeletonCard";
@@ -54,6 +75,7 @@ function FilterChip({ label, count, active, onClick }) {
 /* ─── Main component ───────────────────────────────────────────── */
 export default function SalesHistory() {
   const { showNotice } = useNotice();
+  const { exportExcel, exportPDF } = useExport();
 
   const [sales,        setSales]        = useState([]);
   const [loading,      setLoading]      = useState(true);
@@ -63,6 +85,8 @@ export default function SalesHistory() {
   const [filterStatus, setFilterStatus] = useState("pending");
   const [filterType,   setFilterType]   = useState("all");
   const [selectedSale, setSelectedSale] = useState(null);
+  const [exportOpen,   setExportOpen]   = useState(false);
+  const [exporting,    setExporting]    = useState(false);
 
   /* ── Load ── */
   const loadSales = useCallback(async (silent = false) => {
@@ -97,6 +121,15 @@ export default function SalesHistory() {
     cancelled: sales.filter(s => s.payment_status === "cancelled").length,
   }), [sales]);
 
+  const totalPaidAmount = useMemo(
+    () => sales.filter(s => s.payment_status === "paid").reduce((a, s) => a + Number(s.total), 0),
+    [sales]
+  );
+  const totalPendingAmount = useMemo(
+    () => sales.filter(s => s.payment_status === "pending").reduce((a, s) => a + Number(s.total), 0),
+    [sales]
+  );
+
   const filtered = useMemo(() => sales.filter(s => {
     const q = searchTerm.toLowerCase();
     const matchSearch =
@@ -113,6 +146,58 @@ export default function SalesHistory() {
   const hasActiveFilters = filterStatus !== "all" || filterType !== "all" || !!searchTerm;
   const clearFilters     = () => { setSearchTerm(""); setFilterStatus("all"); setFilterType("all"); };
 
+  /* ── Export ── */
+  const exportColumns = [
+    { key: "sale_number",    label: "N° Venta" },
+    { key: "customer_name",  label: "Cliente" },
+    { key: "created_at_fmt", label: "Fecha" },
+    { key: "channel",        label: "Canal" },
+    { key: "status_label",   label: "Estado" },
+    { key: "total",          label: "Total" },
+  ];
+
+  const buildExportRows = () => filtered.map(s => ({
+    ...s,
+    created_at_fmt: new Date(s.created_at).toLocaleDateString("es-CO"),
+    channel:        s.sale_type === "web" || s.sale_type === "online" ? "Online" : "Local",
+    status_label:   STATUS_CONFIG[s.payment_status]?.label ?? s.payment_status,
+  }));
+
+  const handleExport = async (type) => {
+    setExportOpen(false);
+    setExporting(true);
+    try {
+      const rows = buildExportRows();
+      if (type === "excel") {
+        await exportExcel(
+          [{ name: "Historial", columns: exportColumns, rows, totals: { total: totalFiltered } }],
+          "historial_ventas"
+        );
+      } else {
+        await exportPDF(
+          "Historial de ventas",
+          `${filtered.length} venta${filtered.length !== 1 ? "s" : ""}`,
+          [{
+            columns: exportColumns.map(c => ({
+              header: c.label,
+              dataKey: c.key,
+              align: c.key === "total" ? "right" : "left",
+              format: c.key === "total" ? (v) => `$${Number(v).toLocaleString("es-CO")}` : undefined,
+            })),
+            rows,
+            totals: { total: `$${totalFiltered.toLocaleString("es-CO")}` },
+          }],
+          "historial_ventas"
+        );
+      }
+      showNotice("Exportado correctamente", "success");
+    } catch {
+      showNotice("No se pudo exportar el archivo", "error");
+    } finally {
+      setExporting(false);
+    }
+  };
+
   /* ── Render ── */
   return (
     <div className="min-h-screen pb-28 lg:pb-8 bg-[var(--bg-page)] transition-colors duration-300">
@@ -128,15 +213,64 @@ export default function SalesHistory() {
               {loading ? "Cargando…" : `${sales.length} ventas registradas`}
             </p>
           </div>
-          <button
-            onClick={() => loadSales(true)}
-            disabled={refreshing}
-            className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors disabled:opacity-40"
-            title="Actualizar"
-          >
-            <RefreshCw size={16} strokeWidth={2} className={refreshing ? "animate-spin" : ""} />
-          </button>
+          <div className="flex items-center gap-1">
+            <ProtectedFeature feature="export" showUpgrade={false} fallback={<LockedExportButton />}>
+            <div className="relative">
+              <button
+                onClick={() => setExportOpen(v => !v)}
+                disabled={exporting || filtered.length === 0}
+                className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors disabled:opacity-40"
+                title="Exportar"
+                aria-label="Exportar"
+              >
+                {exporting
+                  ? <Loader2 size={16} strokeWidth={2} className="animate-spin" />
+                  : <Download size={16} strokeWidth={2} />
+                }
+              </button>
+
+              {exportOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setExportOpen(false)} />
+                  <div className="absolute right-0 top-full mt-1.5 z-50 min-w-[170px] bg-[var(--bg-card)] border border-[var(--border)] rounded-xl shadow-xl py-1.5 overflow-hidden">
+                    <button
+                      onClick={() => handleExport("excel")}
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] transition-colors"
+                    >
+                      <FileSpreadsheet size={15} className="text-emerald-600" /> Excel
+                    </button>
+                    <button
+                      onClick={() => handleExport("pdf")}
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] transition-colors"
+                    >
+                      <FileText size={15} className="text-red-500" /> PDF
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+            </ProtectedFeature>
+
+            <button
+              onClick={() => loadSales(true)}
+              disabled={refreshing}
+              className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors disabled:opacity-40"
+              title="Actualizar"
+            >
+              <RefreshCw size={16} strokeWidth={2} className={refreshing ? "animate-spin" : ""} />
+            </button>
+          </div>
         </div>
+
+        {/* ── Resumen ── */}
+        {!loading && sales.length > 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <StatCard icon={Receipt}      label="Ventas"    value={counts.all}                                    color="slate" />
+            <StatCard icon={Clock}        label="Pendiente" value={`$${totalPendingAmount.toLocaleString("es-CO")}`} sub={`${counts.pending} venta${counts.pending !== 1 ? "s" : ""}`} color="amber" />
+            <StatCard icon={CheckCircle2} label="Pagado"    value={`$${totalPaidAmount.toLocaleString("es-CO")}`}    sub={`${counts.paid} venta${counts.paid !== 1 ? "s" : ""}`}       color="emerald" />
+            <StatCard icon={DollarSign}   label="Total"     value={`$${(totalPaidAmount + totalPendingAmount).toLocaleString("es-CO")}`} color="violet" />
+          </div>
+        )}
 
         {/* ── Filtros: chips simples en una fila, sin tarjetas grandes ── */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar -mx-1 px-1">

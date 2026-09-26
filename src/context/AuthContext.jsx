@@ -1,6 +1,7 @@
 // context/AuthContext.jsx
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import api from "../services/api";
+import { useLoading } from "./LoadingContext";
 
 const AuthContext = createContext();
 
@@ -85,6 +86,13 @@ const setupInterceptors = (onSessionExpired) => {
 export const AuthProvider = ({ children }) => {
   const [user,    setUser]    = useState(null);
   const [loading, setLoading] = useState(true);
+  const { startLoading, stopLoading } = useLoading();
+
+  // Muestra la pantalla de carga global mientras se verifica la sesión
+  // al abrir/recargar la app, en vez de dejar la pantalla en blanco.
+  useEffect(() => {
+    if (loading) startLoading(); else stopLoading();
+  }, [loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Limpia todo y redirige al login
   const clearAuth = useCallback(() => {

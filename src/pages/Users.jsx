@@ -12,6 +12,7 @@ import {
   Building2,
 } from "lucide-react";
 import { useNotice } from "../context/NoticeContext";
+import { UsageBar } from "../components/ProtectedFeature";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const initials = (name = "") => name.charAt(0).toUpperCase() || "?";
@@ -221,6 +222,8 @@ export default function Users() {
             )}
           </div>
         </div>
+
+        <UsageBar resource="users" label="Clientes registrados" />
 
         {/* Búsqueda */}
         <div className="relative">

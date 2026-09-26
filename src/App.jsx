@@ -2,6 +2,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider }         from "./context/AuthContext";
 import { ThemeProvider }        from "./context/ThemeContext";
+import { LoadingProvider }      from "./context/LoadingContext";
 import { NoticeProvider }       from "./context/NoticeContext";
 import { ChatProvider }         from "./context/ChatContext";
 import { SocketProvider }       from "./context/SocketContext";
@@ -74,6 +75,7 @@ function NotFound() {
 export default function App() {
   return (
     <ThemeProvider>
+      <LoadingProvider>
       <AuthProvider>
         <SubscriptionProvider>
           <SocketProvider>
@@ -253,6 +255,7 @@ export default function App() {
           </SocketProvider>
         </SubscriptionProvider>
       </AuthProvider>
+      </LoadingProvider>
     </ThemeProvider>
   );
 }

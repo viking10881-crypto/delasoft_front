@@ -25,6 +25,7 @@ import { VariantsManager } from '../components/variants';
 import useRealtimeData    from '../hooks/useRealtimeData';
 import api                from '../services/api';
 import { useNotice }      from '../context/NoticeContext';
+import { UsageBar }       from '../components/ProtectedFeature';
 
 function normalizeProduct(data) {
   return {
@@ -477,6 +478,8 @@ export default function Products() {
               )}
             </div>
           </div>
+
+          <UsageBar resource="products" label="Productos" className="mb-6" />
 
           {/* ── Filtros ── */}
           <div className="flex flex-col sm:flex-row gap-3 mb-6">

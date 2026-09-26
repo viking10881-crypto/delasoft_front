@@ -17,7 +17,7 @@ export default function FinancePinSetup() {
   const [confirmPin, setConfirmPin] = useState('');
 
   useEffect(() => {
-    api.get('/api/finance-pin/status')
+    api.get('/finance-pin/status')
       .then(({ data }) => setHasPin(data.hasPin))
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -38,7 +38,7 @@ export default function FinancePinSetup() {
 
     setSaving(true);
     try {
-      await api.post('/api/finance-pin/setup', {
+      await api.post('/finance-pin/setup', {
         newPin,
         ...(hasPin && { currentPin }),
       });
