@@ -160,7 +160,6 @@ export default function BottomNav({ collapsed, setCollapsed }) {
         <button
           onClick={() => navigate("/subscription")}
           aria-label={`${item.label} (función bloqueada, actualiza tu plan)`}
-          title={rail ? item.label : undefined}
           className={`
             group relative flex items-center gap-3 w-full text-left
             ${mobile
@@ -214,7 +213,6 @@ export default function BottomNav({ collapsed, setCollapsed }) {
     return (
       <NavLink
         to={item.to}
-        title={rail ? item.label : undefined}
         aria-label={rail ? item.label : undefined}
         className={({ isActive }) => mobile
           ? `flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 active:scale-[0.98] ${
@@ -247,16 +245,28 @@ export default function BottomNav({ collapsed, setCollapsed }) {
             <ChevronRight size={16} className={`transition-opacity ${isActive ? "opacity-100 text-white" : "opacity-30 text-slate-500 dark:text-slate-600"}`} />
           </>
         ) : rail ? (
-          <div className="relative">
-            <item.icon
-              size={18}
-              strokeWidth={isActive ? 2 : 1.5}
-              className={isActive ? "text-slate-900 dark:text-white" : "text-slate-600 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-slate-300"}
-            />
-            {item.badge > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-blue-600 ring-2 ring-white dark:ring-[#0a0a0a]" />
-            )}
-          </div>
+          <>
+            <div className="relative">
+              <item.icon
+                size={18}
+                strokeWidth={isActive ? 2 : 1.5}
+                className={isActive ? "text-slate-900 dark:text-white" : "text-slate-600 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-slate-300"}
+              />
+              {item.badge > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-blue-600 ring-2 ring-white dark:ring-[#0a0a0a]" />
+              )}
+            </div>
+
+            {/* Tooltip estilo propio (reemplaza el title nativo del navegador) */}
+            <div className="
+              absolute left-full ml-3 top-1/2 -translate-y-1/2 z-50
+              hidden group-hover:block whitespace-nowrap
+              bg-white border border-slate-200 dark:bg-zinc-900 dark:border-zinc-700 text-slate-900 dark:text-white
+              text-xs font-semibold rounded-xl px-3 py-2 shadow-2xl
+            ">
+              {item.label}
+            </div>
+          </>
         ) : (
           <>
             {isActive && (
@@ -339,7 +349,7 @@ export default function BottomNav({ collapsed, setCollapsed }) {
                   >
                     <div className="flex items-center gap-3">
                       <Settings size={18} className="group-hover:rotate-90 transition-transform duration-500 text-slate-600 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white" strokeWidth={1.5} />
-                      <span className="text-sm font-medium tracking-wide text-slate-700 dark:text-slate-200">Desplegar</span>
+                      <span className="text-sm font-medium tracking-wide text-slate-700 dark:text-slate-200">{section.title}</span>
                     </div>
                     <ChevronDown
                       size={14}
