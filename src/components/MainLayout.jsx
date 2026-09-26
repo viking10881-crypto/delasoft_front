@@ -29,11 +29,11 @@ export default function MainLayout() {
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--sidebar-width",
-      isDesktop && !collapsed ? "280px" : "0px"
+      isDesktop ? (collapsed ? "84px" : "280px") : "0px"
     );
   }, [collapsed, isDesktop]);
 
-  const contentMargin = isDesktop && !collapsed ? "280px" : "0px";
+  const contentMargin = isDesktop ? (collapsed ? "84px" : "280px") : "0px";
 
   return (
     <SidebarContext.Provider value={{ collapsed, setCollapsed }}>

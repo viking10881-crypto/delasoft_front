@@ -153,19 +153,24 @@ export default function BottomNav({ collapsed, setCollapsed }) {
   function NavItem({ item, mobile = false }) {
     const locked = isLocked(item);
 
+    const rail = !mobile && collapsed;
+
     if (locked) {
       return (
         <button
           onClick={() => navigate("/subscription")}
+          aria-label={`${item.label} (función bloqueada, actualiza tu plan)`}
+          title={rail ? item.label : undefined}
           className={`
             group relative flex items-center gap-3 w-full text-left
             ${mobile
               ? "px-4 py-3.5 rounded-2xl bg-transparent text-zinc-600 hover:bg-white/5"
-              : "px-4 py-3 rounded-xl text-slate-600 hover:bg-white/5 hover:text-slate-500"
+              : rail
+                ? "justify-center px-0 py-3 rounded-xl text-slate-600 hover:bg-white/5 hover:text-slate-500"
+                : "px-4 py-3 rounded-xl text-slate-600 hover:bg-white/5 hover:text-slate-500"
             }
             transition-all duration-300
           `}
-          title={`Actualiza tu plan para usar ${FEATURE_UPGRADE_MSG[item.feature] ?? item.label}`}
         >
           {mobile ? (
             <>
@@ -177,6 +182,8 @@ export default function BottomNav({ collapsed, setCollapsed }) {
               </span>
               <Lock size={13} className="text-zinc-600 shrink-0" />
             </>
+          ) : rail ? (
+            <item.icon size={18} strokeWidth={1.5} className="text-slate-600" />
           ) : (
             <>
               <item.icon size={18} strokeWidth={1.5} className="text-slate-600" />
@@ -207,13 +214,17 @@ export default function BottomNav({ collapsed, setCollapsed }) {
     return (
       <NavLink
         to={item.to}
+        title={rail ? item.label : undefined}
+        aria-label={rail ? item.label : undefined}
         className={({ isActive }) => mobile
           ? `flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 active:scale-[0.98] ${
               isActive
                 ? "bg-slate-900 dark:bg-white/10 text-white dark:text-white border border-slate-800 dark:border-white/10 shadow-sm"
                 : "bg-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
             }`
-          : `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 relative group overflow-hidden ${
+          : `flex items-center transition-all duration-300 relative group overflow-hidden ${
+              rail ? "justify-center px-0 py-3 rounded-xl" : "gap-3 px-4 py-3 rounded-xl"
+            } ${
               isActive
                 ? "bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white shadow-sm dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"
                 : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-slate-200"
@@ -235,6 +246,17 @@ export default function BottomNav({ collapsed, setCollapsed }) {
             )}
             <ChevronRight size={16} className={`transition-opacity ${isActive ? "opacity-100 text-white" : "opacity-30 text-slate-500 dark:text-slate-600"}`} />
           </>
+        ) : rail ? (
+          <div className="relative">
+            <item.icon
+              size={18}
+              strokeWidth={isActive ? 2 : 1.5}
+              className={isActive ? "text-slate-900 dark:text-white" : "text-slate-600 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-slate-300"}
+            />
+            {item.badge > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 rounded-full bg-blue-600 ring-2 ring-white dark:ring-[#0a0a0a]" />
+            )}
+          </div>
         ) : (
           <>
             {isActive && (
@@ -271,41 +293,45 @@ export default function BottomNav({ collapsed, setCollapsed }) {
       <aside
         className="
           hidden lg:flex lg:flex-col
-          fixed left-0 top-0 h-screen w-[280px]
+          fixed left-0 top-0 h-screen
           bg-white dark:bg-[#0a0a0a]
           border-r border-slate-200 dark:border-white/5
           z-40 text-slate-900 dark:text-slate-300
           overflow-hidden
-          transition-colors duration-300 ease-in-out
+          transition-[width] duration-300 ease-in-out
         "
-        style={{ transform: collapsed ? "translateX(-100%)" : "translateX(0)" }}
+        style={{ width: collapsed ? "84px" : "280px" }}
       >
         {/* Logo */}
-        <div className="h-24 flex items-center px-8 flex-shrink-0">
+        <div className={`h-24 flex items-center flex-shrink-0 ${collapsed ? "justify-center px-0" : "px-8"}`}>
           <div className="flex items-center gap-3 group cursor-pointer">
             <img
               src="/brand/delasoft-d.png"
               alt="Delasoft"
-              className="w-14 h-14 object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-lg"
+              className="w-14 h-14 object-contain group-hover:scale-105 transition-all duration-300 drop-shadow-lg flex-shrink-0"
             />
-            <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-widest uppercase">
-              Delasoft
-            </h1>
+            {!collapsed && (
+              <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-widest uppercase whitespace-nowrap">
+                Delasoft
+              </h1>
+            )}
           </div>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 overflow-y-auto py-6 px-4 custom-scrollbar">
+        <nav className={`flex-1 overflow-y-auto py-6 custom-scrollbar ${collapsed ? "px-2" : "px-4"}`}>
           {navSections.map((section, idx) => (
             <div key={idx} className="mb-8">
-              <div className="px-4 mb-4 flex items-center gap-2 opacity-60">
-                <span className="text-[10px] grayscale">{section.emoji}</span>
-                <h3 className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em]">
-                  {section.title}
-                </h3>
-              </div>
+              {!collapsed && (
+                <div className="px-4 mb-4 flex items-center gap-2 opacity-60">
+                  <span className="text-[10px] grayscale">{section.emoji}</span>
+                  <h3 className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em]">
+                    {section.title}
+                  </h3>
+                </div>
+              )}
 
-              {section.collapsible ? (
+              {section.collapsible && !collapsed ? (
                 <>
                   <button
                     onClick={() => toggleSection(section.sectionKey)}
@@ -345,36 +371,50 @@ export default function BottomNav({ collapsed, setCollapsed }) {
 
         {/* Plan badge en el footer del sidebar */}
         {subscription && subscription.status !== "superadmin" && (
-          <button
-            onClick={() => navigate("/subscription")}
-            className="mx-4 mb-3 flex items-center gap-2.5 px-3 py-2.5 rounded-xl
-                       border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/30 transition-colors group text-left bg-slate-50 dark:bg-white/5"
-          >
-            <div
-              className="w-6 h-6 rounded-lg flex items-center justify-center text-white text-xs font-bold shrink-0"
+          collapsed ? (
+            <button
+              onClick={() => navigate("/subscription")}
+              title={`${subscription.plan_name} · ${subscription.status === "trial" ? "Trial" : subscription.status === "active" ? "Activo" : subscription.status}`}
+              aria-label="Ver mi suscripción"
+              className="mx-auto mb-3 w-9 h-9 rounded-lg flex items-center justify-center text-white text-xs font-bold shrink-0 hover:opacity-90 transition-opacity"
               style={{ backgroundColor: subscription.color ?? "#8B5CF6" }}
             >
               {subscription.plan_name?.[0] ?? "?"}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{subscription.plan_name}</p>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400">
-                {subscription.status === "trial"
-                  ? `Trial · vence pronto`
-                  : subscription.status === "active"
-                    ? "Activo"
-                    : subscription.status}
-              </p>
-            </div>
-            <Crown size={13} className="text-slate-600 dark:text-slate-300 group-hover:text-violet-500 transition-colors shrink-0" />
-          </button>
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate("/subscription")}
+              className="mx-4 mb-3 flex items-center gap-2.5 px-3 py-2.5 rounded-xl
+                         border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/30 transition-colors group text-left bg-slate-50 dark:bg-white/5"
+            >
+              <div
+                className="w-6 h-6 rounded-lg flex items-center justify-center text-white text-xs font-bold shrink-0"
+                style={{ backgroundColor: subscription.color ?? "#8B5CF6" }}
+              >
+                {subscription.plan_name?.[0] ?? "?"}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{subscription.plan_name}</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                  {subscription.status === "trial"
+                    ? `Trial · vence pronto`
+                    : subscription.status === "active"
+                      ? "Activo"
+                      : subscription.status}
+                </p>
+              </div>
+              <Crown size={13} className="text-slate-600 dark:text-slate-300 group-hover:text-violet-500 transition-colors shrink-0" />
+            </button>
+          )
         )}
 
-        <div className="p-6 pt-2 border-t border-slate-200 dark:border-white/10 flex-shrink-0">
-          <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">
-            © {new Date().getFullYear()} Delasoft
-          </p>
-        </div>
+        {!collapsed && (
+          <div className="p-6 pt-2 border-t border-slate-200 dark:border-white/10 flex-shrink-0">
+            <p className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">
+              © {new Date().getFullYear()} Delasoft
+            </p>
+          </div>
+        )}
       </aside>
 
       {/* ════════════════════════════════════

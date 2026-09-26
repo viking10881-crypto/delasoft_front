@@ -129,14 +129,14 @@ export default function Header({ collapsed, onToggleSidebar }) {
     <>
       <header
         ref={ref}
-        className="
-          fixed top-0 right-0 z-50
+        className={`
+          fixed top-0 right-0 left-0 z-50
+          ${collapsed ? "lg:left-[84px]" : "lg:left-[280px]"}
           bg-white/70 dark:bg-[#0A0A0A]/70
           backdrop-blur-xl backdrop-saturate-150
           border-b border-black/[0.04] dark:border-white/[0.04]
           transition-all duration-300 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
-        "
-        style={{ left: collapsed ? "0px" : "280px" }}
+        `}
       >
         <div className="flex items-center justify-between h-16 sm:h-[72px] px-4 sm:px-8">
 
@@ -146,7 +146,8 @@ export default function Header({ collapsed, onToggleSidebar }) {
             {/* Toggle sidebar */}
             <button
               onClick={onToggleSidebar}
-              title={collapsed ? "Mostrar menú" : "Ocultar menú"}
+              title={collapsed ? "Expandir menú" : "Colapsar menú"}
+              aria-label={collapsed ? "Expandir menú" : "Colapsar menú"}
               className="
                 hidden lg:flex items-center justify-center
                 w-10 h-10 rounded-2xl flex-shrink-0
