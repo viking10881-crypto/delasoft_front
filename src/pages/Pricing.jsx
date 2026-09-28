@@ -33,6 +33,29 @@ const FEATURE_LABELS = {
   has_inventory:      'Inventario y movimientos',
 };
 
+// Web Checkout de Wompi: se envía un formulario GET con la orden firmada por el backend.
+function redirectToWompi(checkout) {
+  const form = document.createElement('form');
+  form.method = 'GET';
+  form.action = checkout.url;
+  Object.entries({
+    'public-key': checkout.public_key,
+    currency: checkout.currency,
+    'amount-in-cents': checkout.amount_in_cents,
+    reference: checkout.reference,
+    'signature:integrity': checkout.signature_integrity,
+    'redirect-url': checkout.redirect_url,
+  }).forEach(([name, value]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.value = value;
+    form.appendChild(input);
+  });
+  document.body.appendChild(form);
+  form.submit();
+}
+
 function formatLimit(key, val) {
   if (val === -1) return 'Ilimitado';
   if (key === 'storage_mb') return val >= 1024 ? `${val / 1024} GB` : `${val} MB`;
@@ -242,23 +265,29 @@ export default function PricingPage() {
 
   async function handleActivate() {
     if (!selectedPlan) return;
+    if (Number(selectedPlan.price_monthly) > 0 && couponResult?.valid) {
+      setToast({ type: 'error', message: 'Los cupones aún no aplican al pago en línea. Quita el cupón o contáctanos.' });
+      return;
+    }
     setLoading(true);
     try {
-      // Aquí integrarías con Wompi si el plan es de pago
-      // Por ahora: llamar a change-plan (en producción, primero generar link de pago)
-      if (selectedPlan.price_monthly === 0) {
+      if (Number(selectedPlan.price_monthly) === 0) {
         await api.post('/subscriptions/change-plan', { plan_slug: selectedPlan.slug });
         setToast({ type: 'success', message: '¡Listo! Plan activado.' });
         fetchMySubscription();
         setSelectedPlan(null);
+        setLoading(false);
       } else {
-        // Redirigir a flujo de pago Wompi
+        const { data } = await api.post('/subscriptions/checkout', {
+          plan_slug: selectedPlan.slug,
+          billing_cycle: billingCycle,
+        });
         setToast({ type: 'info', message: 'Redirigiendo al pago...' });
-        // navigate(`/checkout?plan=${selectedPlan.slug}&cycle=${billingCycle}&coupon=${couponCode}`);
+        redirectToWompi(data.checkout);
+        // loading queda activo mientras el navegador sale hacia Wompi
       }
     } catch (err) {
       setToast({ type: 'error', message: err.response?.data?.message || 'Error al activar plan' });
-    } finally {
       setLoading(false);
     }
   }

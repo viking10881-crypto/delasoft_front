@@ -1,6 +1,6 @@
 // src/pages/MySubscription.jsx
 import { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSubscription } from "../context/SubscriptionContext";
 import api from "../services/api";   // ← api service con token, no axios crudo
 import toast from "react-hot-toast";
@@ -198,6 +198,48 @@ export default function MySubscription() {
 
   useEffect(() => { loadData(); }, [loadData]);
 
+  // Regreso desde Wompi: consulta la orden hasta que el webhook la resuelva
+  // y el plan quede activado (o el pago sea rechazado).
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [paymentReference] = useState(() =>
+    searchParams.get("payment") === "return" ? searchParams.get("reference") : null
+  );
+  useEffect(() => {
+    if (!paymentReference) return;
+    setSearchParams({}, { replace: true });
+    const reference = paymentReference;
+
+    let active = true;
+    let attempt = 0;
+    const toastId = toast.loading("Confirmando tu pago…");
+    const check = async () => {
+      attempt += 1;
+      try {
+        const { data: res } = await api.get(`/public/subscription-checkouts/${encodeURIComponent(reference)}/status`);
+        if (!active) return;
+        const order = res.order;
+        if (order.status === "approved" && order.activated_at) {
+          toast.success("¡Pago aprobado! Tu plan ya está activo.", { id: toastId });
+          await loadData();
+          refresh();
+          return;
+        }
+        if (["declined", "voided", "error"].includes(order.status)) {
+          toast.error("El pago no fue aprobado. No se realizó ningún cobro.", { id: toastId });
+          return;
+        }
+        if (attempt < 10) { window.setTimeout(check, 3000); return; }
+        toast(order.status === "approved"
+          ? "Pago aprobado. Estamos activando tu plan; si no se refleja en unos minutos, contáctanos."
+          : "Tu pago sigue en proceso. Te avisaremos cuando se confirme.", { id: toastId, duration: 8000 });
+      } catch {
+        if (active) toast.error("No pudimos consultar el pago.", { id: toastId });
+      }
+    };
+    check();
+    return () => { active = false; };
+  }, [paymentReference]); // eslint-disable-line react-hooks/exhaustive-deps -- solo al volver de Wompi
+
   // ── acciones ─────────────────────────────────────────────────────
 
   const handleReactivate = async () => {
@@ -213,6 +255,9 @@ export default function MySubscription() {
   };
 
   const handleChangePlan = async (slug) => {
+    // Los planes de pago se contratan desde /pricing, que lleva a Wompi.
+    const plan = plans.find((p) => p.slug === slug);
+    if (Number(plan?.price_monthly) > 0) { navigate("/pricing"); return; }
     setBusy(true);
     try {
       await api.post("/subscriptions/change-plan", { plan_slug: slug });
