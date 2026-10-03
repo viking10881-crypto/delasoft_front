@@ -837,6 +837,11 @@ function CreateModal({ formData, isSaving, permsMap, onTogglePerm, onChange, onC
         </div>
 
         <form onSubmit={onSubmit} className="p-6 space-y-5 overflow-y-auto">
+          <div className="rounded-xl border border-amber-200 dark:border-amber-500/20 bg-amber-50 dark:bg-amber-500/10 p-3.5 text-xs text-amber-800 dark:text-amber-300 space-y-1.5">
+            <p className="font-bold">¿Para qué sirve esta clave?</p>
+            <p>Es la llave que permite a tu tienda web leer tus productos y categorías desde Delasoft. Cópiala al momento de crearla y pégala en la configuración de tu tienda: no volverá a mostrarse.</p>
+            <p>Para una tienda web basta con <strong>Ver productos</strong> y <strong>Ver categorías</strong>.</p>
+          </div>
           <div className="space-y-1.5">
             <label className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">Nombre *</label>
             <input required placeholder="Mi tienda web" value={formData.name} onChange={(e) => onChange("name", e.target.value)} className={inputCls} />
@@ -876,7 +881,7 @@ function CreateModal({ formData, isSaving, permsMap, onTogglePerm, onChange, onC
               Orígenes permitidos <span className="font-normal normal-case">(opcional, separados por comas)</span>
             </label>
             <input placeholder="https://mitienda.com, https://app.mitienda.com" value={formData.allowed_origins} onChange={(e) => onChange("allowed_origins", e.target.value)} className={inputCls} />
-            <p className="text-[10px] text-gray-400 dark:text-slate-600">Si dejas vacío, se aceptan peticiones de cualquier origen.</p>
+            <p className="text-[10px] text-gray-400 dark:text-slate-600">Pon el dominio exacto de tu tienda (por ejemplo https://mitienda.com). Si lo dejas vacío, cualquier sitio podría usar la clave; no es recomendable.</p>
           </div>
 
           <div className="space-y-1.5">
