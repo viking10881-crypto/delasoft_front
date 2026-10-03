@@ -45,7 +45,9 @@ export function isStandalone() {
 
 /** Estado actual del permiso */
 export function notificationPermission() {
-  return Notification?.permission ?? "default";
+  // Chrome en iOS no expone el global Notification; ?. no protege un identificador inexistente
+  if (typeof Notification === "undefined") return "default";
+  return Notification.permission ?? "default";
 }
 
 // ── Service Worker ───────────────────────────────────────────
