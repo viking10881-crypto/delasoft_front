@@ -293,7 +293,7 @@ export default function Header({ collapsed, onToggleSidebar }) {
                 {/* Items */}
                 <div className="p-2 space-y-0.5">
                   <button
-                    onClick={() => handleNavigate("/tools/business-profile")}
+                    onClick={() => handleNavigate("/tools/settings/business-profile")}
                     className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left hover:bg-black/5 dark:hover:bg-white/[0.08] active:scale-[0.98] transition-all duration-200 group"
                   >
                     <div className="w-8 h-8 rounded-lg bg-white dark:bg-[#1A1D24] shadow-sm border border-black/[0.04] dark:border-white/[0.04] flex items-center justify-center flex-shrink-0 group-hover:shadow-md transition-shadow">

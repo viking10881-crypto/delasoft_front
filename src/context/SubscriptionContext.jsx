@@ -15,7 +15,7 @@ export const FEATURE_ROUTES = {
   financial_reports: ["/tools/finance"],
   purchase_orders:   ["/tools/providers", "/procurement"],
   discount_system:   ["/tools/discounts"],
-  custom_branding:   ["/tools/business-profile"],
+  custom_branding:   ["/tools/settings/business-profile"],
   wompi_payments:    ["/tools/payments"],
   inventory:         ["/tools/inventory"],
 };
