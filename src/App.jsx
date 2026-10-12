@@ -32,6 +32,7 @@ import Agent           from "./pages/tools/Agent";
 import BusinessProfile from "./pages/tools/BusinessProfile";
 import Chat            from "./pages/tools/Chat";
 import Settings        from "./pages/tools/Settings";
+import InstallApp      from "./pages/tools/InstallApp";
 import Inventory       from "./pages/tools/Inventory";
 import Setup           from "./pages/Setup";
 import ApiKeys            from "./pages/tools/ApiKeys";
@@ -241,6 +242,7 @@ export default function App() {
                                 <NotificationSettings />
                               </ProtectedRoute>
                             } />
+                            <Route path="install" element={<InstallApp />} />
                           </Route>
 
                         </Route>

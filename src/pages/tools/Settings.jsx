@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet, useLocation, Navigate } from 'react-router-dom';
-import { Key, CreditCard, Briefcase, Bell, ChevronRight, Palette, FileCheck2 } from 'lucide-react';
+import { Key, CreditCard, Briefcase, Bell, ChevronRight, Palette, FileCheck2, Smartphone } from 'lucide-react';
 
 const menuItems = [
   {
@@ -50,6 +50,14 @@ const menuItems = [
     icon: Bell,
     accent: '#ede9fe',
     accentText: '#6d28d9',
+  },
+  {
+    name: 'Instalar app',
+    description: 'Agrega Delasoft a la pantalla de inicio de tu dispositivo',
+    path: '/tools/settings/install',
+    icon: Smartphone,
+    accent: '#e0f2fe',
+    accentText: '#0369a1',
   },
 ];
 

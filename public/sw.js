@@ -1,59 +1,93 @@
 /* ============================================================
    Service Worker — Delasoft PWA
    Ubicación: /public/sw.js  (raíz del build de Vite)
+
+   Regla de privacidad: este SW NUNCA cachea páginas HTML, respuestas
+   de API ni datos del usuario. Solo cachea archivos estáticos con hash
+   (/assets/*, salida de Vite) e íconos (/icons/*). Las navegaciones
+   siempre van a la red; si falla, se sirve /offline.html precacheado.
    ============================================================ */
 
-const CACHE_NAME     = "delasoft-v2";
-const STATIC_ASSETS  = ["/", "/index.html"];
+const CACHE_NAME   = "delasoft-static-v1";
+const MAX_ENTRIES  = 80;
 
-// ── Instalación ──────────────────────────────────────────────
+const PRECACHE = [
+  "/offline.html",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
+  "/icons/icon-512-maskable.png",
+  "/icons/apple-touch-icon.png",
+];
+
+// ── Instalación: precachear solo estáticos + fallback offline ───────────────
 self.addEventListener("install", (e) => {
   e.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => cache.addAll(STATIC_ASSETS))
+      .then((cache) => cache.addAll(PRECACHE))
       .then(() => self.skipWaiting())
   );
 });
 
-// ── Activación: limpiar caches viejos ────────────────────────
+// ── Activación: borrar caches de versiones anteriores ───────────────────────
 self.addEventListener("activate", (e) => {
   e.waitUntil(
     caches
       .keys()
-      .then((keys) =>
-        Promise.all(
-          keys
-            .filter((k) => k !== CACHE_NAME)
-            .map((k) => caches.delete(k))
-        )
-      )
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))))
       .then(() => clients.claim())
   );
 });
 
-// ── Fetch: Network-first para API, Cache-first para assets ───
+// ── Util: limitar el tamaño del cache (FIFO simple) ─────────────────────────
+async function trimCache(cacheName, maxItems) {
+  const cache = await caches.open(cacheName);
+  const keys = await cache.keys();
+  if (keys.length <= maxItems) return;
+  await Promise.all(keys.slice(0, keys.length - maxItems).map((k) => cache.delete(k)));
+}
+
+function isCacheableStatic(url) {
+  return url.pathname.startsWith("/assets/") || url.pathname.startsWith("/icons/");
+}
+
+// ── Fetch ────────────────────────────────────────────────────────────────
 self.addEventListener("fetch", (e) => {
   const { request } = e;
   const url = new URL(request.url);
 
-  // No interceptar peticiones al backend
-  if (url.pathname.startsWith("/api/")) return;
-  // Solo interceptar GET del mismo origen
+  // Solo GET del mismo origen
   if (request.method !== "GET" || url.origin !== self.location.origin) return;
+  // Nunca interceptar la API ni nada bajo /api/
+  if (url.pathname.startsWith("/api/")) return;
 
-  e.respondWith(
-    fetch(request)
-      .then((res) => {
-        // Cachear solo respuestas válidas de assets estáticos
-        if (res.ok && (url.pathname.startsWith("/assets/") || url.pathname === "/")) {
-          const clone = res.clone();
-          caches.open(CACHE_NAME).then((c) => c.put(request, clone));
-        }
-        return res;
+  // Navegaciones (cambiar de página / recargar): siempre red, nunca cache de HTML.
+  // Si falla (sin conexión), mostrar la página offline precacheada.
+  if (request.mode === "navigate") {
+    e.respondWith(fetch(request).catch(() => caches.match("/offline.html")));
+    return;
+  }
+
+  // Estáticos con hash e íconos: cache-first, se repueblan solos en cada deploy
+  // porque el nombre del archivo cambia (contenido con hash).
+  if (isCacheableStatic(url)) {
+    e.respondWith(
+      caches.match(request).then((cached) => {
+        if (cached) return cached;
+        return fetch(request).then((res) => {
+          if (res.ok) {
+            const clone = res.clone();
+            caches.open(CACHE_NAME).then((c) => c.put(request, clone).then(() => trimCache(CACHE_NAME, MAX_ENTRIES)));
+          }
+          return res;
+        });
       })
-      .catch(() => caches.match(request).then((cached) => cached ?? caches.match("/index.html")))
-  );
+    );
+    return;
+  }
+
+  // Cualquier otra petición GET (CSS/JS sin hash, fuentes externas, etc.): red directa,
+  // sin pasar por el SW ni quedar en cache.
 });
 
 // ── Colores por severidad ────────────────────────────────────
@@ -77,8 +111,8 @@ self.addEventListener("push", (e) => {
   const {
     title    = "Delasoft",
     body     = "",
-    icon     = "/brand/delasoft-d.png",
-    badge    = "/brand/delasoft-d.png",
+    icon     = "/icons/icon-192.png",
+    badge    = "/icons/icon-192.png",
     url      = "/",
     tag      = "delasoft-general",
     severity = "info",

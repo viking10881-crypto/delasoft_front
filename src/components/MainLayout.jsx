@@ -4,6 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import Header from "./Header";
 import BottomNav from "./BottomNav";
 import SubscriptionBanner from "./SubscriptionBanner";
+import InstallAppCard from "./InstallAppCard";
 import AnimatedPage from "./AnimatedPage";
 import { Outlet, useLocation } from "react-router-dom";
 import usePageTracker from "../hooks/usePageTracker";  // ← nuevo
@@ -54,6 +55,9 @@ export default function MainLayout() {
             className="w-full pb-28 lg:pb-10"
           >
             <SubscriptionBanner />
+            <div className="px-4 sm:px-6 pt-3">
+              <InstallAppCard />
+            </div>
             <AnimatePresence mode="wait">
               <AnimatedPage key={location.pathname}>
                 <Outlet />
